@@ -1,6 +1,7 @@
 using System;
 using _00_Scripts.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _00_Scripts.Scenes
 {
@@ -15,14 +16,29 @@ namespace _00_Scripts.Scenes
             UIRoot = FindFirstObjectByType<UIRoot>();
         }
 
-        protected virtual void Start()
+        public virtual void Init()
         {
             SetScreen();
+
+            if (Debug.isDebugBuild)
+            {
+                var sceneName = SceneManager.GetActiveScene().name;
+                Debug.Log($"[Entry Point] {sceneName} Initialized");
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            if (Debug.isDebugBuild)
+            {
+                var sceneName = SceneManager.GetActiveScene().name;
+                Debug.Log($"[Entry Point] {sceneName} Disposed");
+            }
         }
 
         private void SetScreen()
         {
-            if (uiScreen == null)
+            if (!uiScreen)
             {
                 throw new NullReferenceException("UIScreen is not set");
             }

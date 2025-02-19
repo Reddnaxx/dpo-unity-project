@@ -5,16 +5,18 @@ using _00_Scripts.UI;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace _00_Scripts.Scenes
 {
     public class SceneController
     {
         private readonly CanvasGroup _loadingScreenCanvasGroup;
-        private const int SecondsToWait = 1;
+        private const float SecondsToWait = .5f;
 
         private readonly UIRoot _uiRoot;
-
+        private SceneEntryPoint _currentEntryPoint;
+        
         public SceneController(UIRoot uiRoot)
         {
             _uiRoot = uiRoot;
@@ -27,6 +29,8 @@ namespace _00_Scripts.Scenes
 
         private IEnumerator LoadSceneCoroutine(string sceneName)
         {
+            _currentEntryPoint?.Dispose();
+            
             _uiRoot.ShowLoaderSmooth();
             yield return new WaitForSeconds(UIRoot.FadeDuration);
 
@@ -34,6 +38,10 @@ namespace _00_Scripts.Scenes
             yield return new WaitForSeconds(SecondsToWait);
 
             yield return SceneManager.LoadSceneAsync(sceneName);
+            
+            _currentEntryPoint = Object.FindFirstObjectByType<SceneEntryPoint>();
+            _currentEntryPoint?.Init();
+            
             _uiRoot.HideLoaderSmooth();
         }
     }

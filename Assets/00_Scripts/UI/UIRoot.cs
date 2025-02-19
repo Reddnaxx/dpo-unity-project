@@ -30,18 +30,18 @@ namespace _00_Scripts.UI
             Instantiate(newScreen, screens, false);
         }
 
-        public void ShowLoaderSmooth()
+        public void ShowLoaderSmooth(float time = FadeDuration)
         {
-            loadingScreenCanvasGroup.DOFade(1, FadeDuration).OnStart(() =>
+            loadingScreenCanvasGroup.DOFade(1, time).OnStart(() =>
             {
                 loadingScreenCanvasGroup.blocksRaycasts = true;
                 loadingScreenCanvasGroup.interactable = true;
             });
         }
 
-        public void HideLoaderSmooth()
+        public void HideLoaderSmooth(float time = FadeDuration)
         {
-            loadingScreenCanvasGroup.DOFade(0, FadeDuration).OnComplete(() =>
+            loadingScreenCanvasGroup.DOFade(0, time).OnComplete(() =>
             {
                 loadingScreenCanvasGroup.blocksRaycasts = false;
                 loadingScreenCanvasGroup.interactable = false;

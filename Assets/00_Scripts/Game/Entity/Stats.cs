@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using _00_Scripts.Game.Items;
 using UnityEngine;
@@ -12,8 +13,8 @@ namespace _00_Scripts.Game.Entity
     Poison
   }
 
-  [System.Serializable]
-  public class Stats: IStats
+  [Serializable]
+  public class Stats : IStats
   {
     [field: SerializeField] public float Health { get; private set; }
     [field: SerializeField] public float MaxHealth { get; private set; }
@@ -118,7 +119,7 @@ namespace _00_Scripts.Game.Entity
           tempStats.PoisonResistance *= upgrade.Value;
           break;
         default:
-          throw new System.ArgumentOutOfRangeException();
+          throw new ArgumentOutOfRangeException();
       }
 
       return tempStats;

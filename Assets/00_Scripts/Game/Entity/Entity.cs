@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using _00_Scripts.Game.Items;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _00_Scripts.Game.Entity
 {

@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace _00_Scripts.UI
 {
-    public class MaimMenuUI : MonoBehaviour
+  public class MaimMenuUI : MonoBehaviour
+  {
+    public void OnPlayClick()
     {
-        public void OnPlayClick()
-        {
-            Events.Publish("loadScene", SceneNames.Sandbox);
-        }
+      Events.Publish("loadScene", SceneNames.Sandbox);
     }
+  }
 }

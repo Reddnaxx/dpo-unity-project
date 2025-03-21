@@ -1,6 +1,6 @@
 namespace _00_Scripts.Scenes
 {
-    public class MainMenuEntryPoint : SceneEntryPoint
-    {
-    }
+  public class MainMenuEntryPoint : SceneEntryPoint
+  {
+  }
 }

@@ -1,26 +1,32 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+namespace _00_Scripts.Input
 {
-    PlayerInput playerInput;
-    InputAction moveAction;
+  public class PlayerMovement : MonoBehaviour
+  {
+    private PlayerInput _playerInput;
+    private InputAction _moveAction;
 
-    [SerializeField] float speed = 3;
-    void Start()
+    [SerializeField] private float speed = 3;
+
+    private void Start()
     {
-        playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions.FindAction("Move");
+      _playerInput = GetComponent<PlayerInput>();
+
+      _moveAction = _playerInput.actions.FindAction("Move");
     }
 
-    void Update()
+    private void Update()
     {
-        MovePlayer();
+      MovePlayer();
     }
 
-    void MovePlayer()
+    private void MovePlayer()
     {
-        Vector2 direction = moveAction.ReadValue<Vector2>();
-        transform.position += new Vector3(direction.x, direction.y, 0) * speed * Time.deltaTime;
+      var direction = _moveAction.ReadValue<Vector2>();
+      transform.position += new Vector3(direction.x, direction.y, 0) *
+                            (speed * Time.deltaTime);
     }
+  }
 }

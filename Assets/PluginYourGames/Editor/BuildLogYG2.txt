@@ -1,0 +1,3 @@
+Build path: D:/Dev/UnityProjects/dpo-unity-project/Build
+Build number: 1
+PluginYG version: 2.0031

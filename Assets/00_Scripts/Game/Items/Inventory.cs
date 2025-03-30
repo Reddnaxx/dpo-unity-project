@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _00_Scripts.Game.Entity;
+using UniRx;
 
 namespace _00_Scripts.Game.Items
 {
@@ -8,7 +9,9 @@ namespace _00_Scripts.Game.Items
   public class Inventory
   {
     private readonly IStats _defaultStats;
-    private List<Item> _items = new();
+
+    public IReadOnlyReactiveCollection<Item> Items => _items;
+    private ReactiveCollection<Item> _items = new();
 
     public Inventory(IStats defaultStats)
     {
@@ -35,11 +38,6 @@ namespace _00_Scripts.Game.Items
       }
 
       return finalStats;
-    }
-
-    public List<Item> GetItems()
-    {
-      return new List<Item>(_items);
     }
   }
 }

@@ -575,7 +575,7 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    WebGL: PLUGIN_YG_2;YandexGamesPlatform_yg;TMP_YG2
+    WebGL: PLUGIN_YG_2;YandexGamesPlatform_yg;TMP_YG2;RU_YG2
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

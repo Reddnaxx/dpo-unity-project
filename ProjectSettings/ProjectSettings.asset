@@ -586,7 +586,11 @@ PlayerSettings:
     PS5: DOTWEEN
     QNX: DOTWEEN
     ReservedCFE: DOTWEEN
+<<<<<<< HEAD
     Standalone: DOTWEEN;PLUGIN_YG_2;YandexGamesPlatform_yg;TMP_YG2
+=======
+    Standalone: DOTWEEN;PLUGIN_YG_2;YandexGamesPlatform_yg;TMP_YG2;RU_YG2
+>>>>>>> 430c665 (DP-22)
     VisionOS: DOTWEEN
     WebGL: DOTWEEN;YandexGamesPlatform_yg;PLUGIN_YG_2;RU_YG2;TMP_YG2
     Windows Store Apps: DOTWEEN

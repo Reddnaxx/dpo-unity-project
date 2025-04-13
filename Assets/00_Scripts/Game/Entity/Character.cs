@@ -1,26 +1,57 @@
-using _00_Scripts.Game.Items;
+using System;
+using DG.Tweening;
+using JetBrains.Annotations;
+using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _00_Scripts.Game.Entity
 {
-  public class Character : MonoBehaviour
+  public abstract class Character : MonoBehaviour
   {
     [SerializeField] protected DefaultStats defaultStats;
+    [SerializeField] [CanBeNull] protected Image healthBarFill;
 
     protected Stats CurrentStats;
-    protected Inventory Inventory;
+
+    protected float CurrentHealthPercentage =>
+      CurrentStats.Health / CurrentStats.MaxHealth;
+
+    public IObservable<Unit> OnDeath => _healthPercentage
+      .Where(value => value <= 0f)
+      .First()
+      .AsUnitObservable();
+
+    private ReactiveProperty<float> _healthPercentage;
 
     protected virtual void Awake()
     {
-      Inventory = new Inventory(defaultStats);
       CurrentStats = new Stats(defaultStats);
+
+      _healthPercentage = new ReactiveProperty<float>(CurrentHealthPercentage);
     }
 
-    protected virtual void AddItem(Item item)
+    protected virtual void Start()
     {
-      Inventory.AddItem(item);
+      if (healthBarFill)
+      {
+        _healthPercentage.Subscribe(value =>
+          {
+            DOTween.To(
+              () => healthBarFill.fillAmount,
+              x => healthBarFill.fillAmount = x,
+              value,
+              0.2f);
+          })
+          .AddTo(this);
+      }
+    }
 
-      CurrentStats = Inventory.GetFinalStats();
+    public virtual void TakeDamage(float damage)
+    {
+      CurrentStats.TakeDamage(damage);
+
+      _healthPercentage.Value = Mathf.Round(CurrentHealthPercentage * 10) / 10;
     }
   }
 }

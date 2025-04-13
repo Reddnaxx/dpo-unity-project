@@ -125,7 +125,7 @@ namespace _00_Scripts.Game.Entity
       return tempStats;
     }
 
-    public void TakeDamage(int damage,
+    public void TakeDamage(float damage,
       DamageType damageType = DamageType.Physical)
     {
       var resistance = damageType switch

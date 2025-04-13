@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _00_Scripts.UI
 {
-  public class MaimMenuUI : MonoBehaviour
+  public class MainMenuUI : MonoBehaviour
   {
     public void OnPlayClick()
     {

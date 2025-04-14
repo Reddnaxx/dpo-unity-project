@@ -11,7 +11,7 @@ namespace _00_Scripts.Game.Weapon
     [SerializeField] protected float fireRate = 0.5f;
     [SerializeField] private float orderChangeAngle = 45f;
 
-    [SerializeField] private SpriteRenderer body;
+    [SerializeField] protected SpriteRenderer body;
 
     private static Vector2 MousePosition =>
       Camera.main?.ScreenToWorldPoint(UnityEngine.Input.mousePosition) ??

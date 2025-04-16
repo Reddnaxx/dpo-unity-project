@@ -586,7 +586,7 @@ PlayerSettings:
     PS5: DOTWEEN
     Stadia: DOTWEEN
     Standalone: DOTWEEN;PLUGIN_YG_2;YandexGamesPlatform_yg;TMP_YG2
-    WebGL: DOTWEEN
+    WebGL: DOTWEEN;PLUGIN_YG_2;YandexGamesPlatform_yg;TMP_YG2
     Windows Store Apps: DOTWEEN
     XboxOne: DOTWEEN
     iPhone: DOTWEEN

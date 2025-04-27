@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets._00_Scripts.Input
 {
     public class EnemyFollow : MonoBehaviour
     {
-        [SerializeField] public Transform player; 
+        [SerializeField] public Transform player;
         [SerializeField] public float speed = 2f;
+
+        private Rigidbody2D rb;
+
+        private void Start()
+        {
+            rb = GetComponent<Rigidbody2D>();
+        }
 
         private void Update()
         {
@@ -18,7 +20,7 @@ namespace Assets._00_Scripts.Input
 
             Vector3 direction = (player.position - transform.position).normalized;
 
-            transform.position += direction * speed * Time.deltaTime;
+            rb.linearVelocity = direction * speed;
         }
     }
 }

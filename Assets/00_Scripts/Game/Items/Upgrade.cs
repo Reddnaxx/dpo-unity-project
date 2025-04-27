@@ -17,16 +17,16 @@ namespace _00_Scripts.Game.Items
     IceResistance,
     IceResistanceMultiplier,
     PoisonResistance,
-    PoisonResistanceMultiplier,
+    PoisonResistanceMultiplier
   }
 
   [Serializable]
   public class Upgrade
   {
-    public UpgradeType Type { get; private set; }
-    public float Value { get; private set; }
+        public UpgradeType Type { get; }
+            public float Value { get; }
 
-    public Upgrade(UpgradeType type, float value)
+        public Upgrade(UpgradeType type, float value)
     {
       Type = type;
       Value = value;

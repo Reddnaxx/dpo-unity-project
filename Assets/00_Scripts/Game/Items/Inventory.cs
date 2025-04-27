@@ -11,7 +11,7 @@ namespace _00_Scripts.Game.Items
     private readonly IStats _defaultStats;
 
     public IReadOnlyReactiveCollection<Item> Items => _items;
-    private ReactiveCollection<Item> _items = new();
+    private readonly ReactiveCollection<Item> _items = new();
 
     public Inventory(IStats defaultStats)
     {
@@ -32,10 +32,7 @@ namespace _00_Scripts.Game.Items
     {
       var finalStats = new Stats(_defaultStats);
 
-      foreach (var item in _items)
-      {
-        finalStats.ApplyItem(item);
-      }
+      foreach (var item in _items) finalStats.ApplyItem(item);
 
       return finalStats;
     }

@@ -1,12 +1,11 @@
 using UnityEngine;
-using UniRx;
 using System.Collections.Generic;
 using _00_Scripts.Game.Enemies;
 
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private EnemyPool _enemyPool;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnInterval = 3f;
     [SerializeField] private int _maxEnemies = 10;
@@ -17,7 +16,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float _waveCooldown = 10f;
 
     private List<Enemy> _activeEnemies = new List<Enemy>();
-    private float _spawnTimer;
     private float _waveTimer;
     private int _currentWave = 1;
 
@@ -50,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < enemiesToSpawn && _activeEnemies.Count < _maxEnemies; i++)
         {
             SpawnEnemy();
-            yield return new WaitForSeconds(0.5f); 
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -59,12 +57,7 @@ public class EnemySpawner : MonoBehaviour
         if (_activeEnemies.Count >= _maxEnemies) return;
 
         Vector2 spawnPosition = GetSpawnPosition();
-        Enemy newEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
-        newEnemy.Initialize(_playerTransform);
-
-        newEnemy.OnDeath
-            .Subscribe(_ => RemoveEnemy(newEnemy))
-            .AddTo(this);
+        Enemy newEnemy = _enemyPool.GetEnemy(spawnPosition, _playerTransform);
 
         _activeEnemies.Add(newEnemy);
     }
@@ -73,11 +66,5 @@ public class EnemySpawner : MonoBehaviour
     {
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         return (Vector2)_playerTransform.position + randomDirection * _spawnRadius;
-    }
-
-    private void RemoveEnemy(Enemy enemy)
-    {
-        _activeEnemies.Remove(enemy);
-        Destroy(enemy.gameObject);
     }
 }

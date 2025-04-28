@@ -14,8 +14,13 @@ public class EnemyPool : MonoBehaviour
     {
         for (int i = 0; i < _poolSize; i++)
         {
-            Enemy enemy = Instantiate(_enemyPrefab);
+            Enemy enemy = Instantiate(_enemyPrefab, transform); // сразу родителем пул
             enemy.gameObject.SetActive(false);
+
+            enemy.OnDeath
+                .Subscribe(_ => ReturnEnemy(enemy))
+                .AddTo(enemy); // подписка к самому врагу, а не к пулу
+
             _enemyPool.Enqueue(enemy);
         }
     }
@@ -24,8 +29,12 @@ public class EnemyPool : MonoBehaviour
     {
         if (_enemyPool.Count == 0)
         {
-            // Если пул пуст, создаем нового врага
-            Enemy newEnemy = Instantiate(_enemyPrefab);
+            // Пул пуст — создаем нового и подписываем сразу
+            Enemy newEnemy = Instantiate(_enemyPrefab, transform);
+            newEnemy.OnDeath
+                .Subscribe(_ => ReturnEnemy(newEnemy))
+                .AddTo(newEnemy);
+
             InitializeEnemy(newEnemy, position, target);
             return newEnemy;
         }
@@ -44,11 +53,6 @@ public class EnemyPool : MonoBehaviour
     private void InitializeEnemy(Enemy enemy, Vector2 position, Transform target)
     {
         enemy.transform.position = position;
-        enemy.Initialize(target);
         enemy.gameObject.SetActive(true);
-
-        enemy.OnDeath
-            .Subscribe(_ => ReturnEnemy(enemy))
-            .AddTo(this);
     }
 }

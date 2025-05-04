@@ -14,7 +14,6 @@ namespace _00_Scripts.Game.Weapon.Core
     [RequireComponent(typeof(AudioSource))]
     public abstract class Weapon : MonoBehaviour
     {
-        [Header("Data")]
         [SerializeField] protected WeaponData data;
 
         [Header("References")]
@@ -23,12 +22,13 @@ namespace _00_Scripts.Game.Weapon.Core
         [SerializeField] protected SpriteRenderer bodyRenderer;
 
         protected InputAction AttackAction;
-        private readonly CompositeDisposable _disposables = new();
+        private CompositeDisposable _disposables;
         protected AudioSource AudioSource;
 
         protected virtual void Awake()
         {
             AudioSource = GetComponent<AudioSource>();
+            _disposables = new CompositeDisposable();
 
             var pi = FindFirstObjectByType<PlayerInput>();
             AttackAction = pi.actions["Attack"];

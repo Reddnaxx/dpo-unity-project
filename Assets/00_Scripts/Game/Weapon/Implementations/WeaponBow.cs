@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Game.Weapon.Projectiles;
 using _00_Scripts.Helpers;
 
@@ -14,17 +15,8 @@ namespace _00_Scripts.Game.Weapon.Implementations
 {
   public class WeaponBow : Core.Weapon
   {
-    [Header("Bow Settings")] [SerializeField]
-    private float maxChargeTime = 2f;
-
-    [SerializeField] private float chargeRatioThreshold = 0.1f;
-    [SerializeField] private float releaseTime = 0.5f;
-
-    [SerializeField] private AnimationCurve damageMultiplierCurve =
-      AnimationCurve.EaseInOut(0, 0, 1, 2);
-
-    [SerializeField] private AnimationCurve velocityMultiplierCurve =
-      AnimationCurve.EaseInOut(0, 0, 1, 2);
+    [Header("Bow Settings")]
+    private BowWeaponData BowData => data as BowWeaponData;
 
     [Header("Arrow Visuals")] [SerializeField]
     private SpriteRenderer arrowBody;
@@ -38,6 +30,11 @@ namespace _00_Scripts.Game.Weapon.Implementations
     private float _chargeTime;
     private IDisposable _chargeSubscription;
     private CompositeDisposable _bowDisp;
+
+    public WeaponBow(BowWeaponData data)
+    {
+      this.data = data;
+    }
 
     protected override void Awake()
     {
@@ -55,6 +52,7 @@ namespace _00_Scripts.Game.Weapon.Implementations
       AttackAction
         .OnPerformedAsObservable()
         .Where(_ => !_isCharging)
+        .ThrottleFirst(TimeSpan.FromSeconds(data.fireRate))
         .Subscribe(_ => StartCharging())
         .AddTo(_bowDisp);
 
@@ -89,17 +87,17 @@ namespace _00_Scripts.Game.Weapon.Implementations
       _chargeSubscription = Observable.EveryUpdate()
         .Subscribe(_ =>
         {
-          _chargeTime = Mathf.Min(_chargeTime + Time.deltaTime, maxChargeTime);
+          _chargeTime = Mathf.Min(_chargeTime + Time.deltaTime, BowData.maxChargeTime);
 
           // Меняем спрайт лука в зависимости от уровня заряда
-          int idx = Mathf.FloorToInt(
-            _chargeTime / maxChargeTime * (bowChargeSprites.Count - 1)
+          var idx = Mathf.FloorToInt(
+            _chargeTime / BowData.maxChargeTime * (bowChargeSprites.Count - 1)
           );
           bodyRenderer.sprite = bowChargeSprites[idx];
 
           // Смещаем стрелу у тетивы
-          float raw = Mathf.Lerp(0f, arrowChargeOffset, _chargeTime / maxChargeTime);
-          float offset = Mathf.Round(raw * arrowChargeStep) / arrowChargeStep;
+          var raw = Mathf.Lerp(0f, arrowChargeOffset, _chargeTime / BowData.maxChargeTime);
+          var offset = Mathf.Round(raw * arrowChargeStep) / arrowChargeStep;
           arrowBody.transform.localPosition =
             _arrowDefaultLocalPosition - new Vector3(offset, 0, 0);
         })
@@ -115,27 +113,27 @@ namespace _00_Scripts.Game.Weapon.Implementations
       DOTween.To(
           () => bowChargeSprites.IndexOf(bodyRenderer.sprite),
           x => bodyRenderer.sprite = bowChargeSprites[Mathf.RoundToInt(x)],
-          0, releaseTime
+          0, BowData.releaseTime
         )
         .SetUpdate(true);
 
       // Возвращаем позицию стрелы
       arrowBody.transform
-        .DOLocalMove(_arrowDefaultLocalPosition, releaseTime)
+        .DOLocalMove(_arrowDefaultLocalPosition, BowData.releaseTime)
         .SetUpdate(true);
     }
 
     private void ReleaseAndShoot()
     {
-      float ratio = Mathf.Clamp01(_chargeTime / maxChargeTime);
-      if (ratio < chargeRatioThreshold) return;
+      var ratio = Mathf.Clamp01(_chargeTime / BowData.maxChargeTime);
+      if (ratio < BowData.chargeRatioThreshold) return;
 
       // Инстанцируем снаряд и устанавливаем параметры
       var projGO = Instantiate(data.projectilePrefab, firePoint.position, transform.rotation);
       var proj = projGO.GetComponent<Projectile>();
       proj.Init(
-        data.projectileSpeed * velocityMultiplierCurve.Evaluate(ratio),
-        data.damage * damageMultiplierCurve.Evaluate(ratio)
+        data.projectileSpeed * BowData.velocityMultiplierCurve.Evaluate(ratio),
+        data.damage * BowData.damageMultiplierCurve.Evaluate(ratio)
       );
 
       // Визуальный эффект и звук выстрела

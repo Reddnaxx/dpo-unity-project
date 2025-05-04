@@ -20,9 +20,7 @@ namespace _00_Scripts.UI
     public void ClearScreens()
     {
       for (var i = 0; i < screens.childCount; i++)
-      {
         Destroy(screens.GetChild(i).gameObject);
-      }
     }
 
     public void AddScreen(GameObject newScreen)

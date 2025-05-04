@@ -1,4 +1,5 @@
 using _00_Scripts.Constants;
+using _00_Scripts.Events;
 using _00_Scripts.Helpers;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace _00_Scripts.UI
   {
     public void OnPlayClick()
     {
-      Events.Publish("loadScene", SceneNames.Sandbox);
+      EventBus.Publish(new LoadSceneEvent(SceneNames.Sandbox));
     }
   }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _00_Scripts.Game.Weapon.Strategies
 {
-  [CreateAssetMenu(menuName = "Weapon/FireStrategy/Spread")]
+  [CreateAssetMenu(menuName = "Game/Weapon/FireStrategy/Spread")]
   public class SpreadFireStrategy : FireStrategy
   {
     [Header("Spread Settings")] [Tooltip("Количество пеллетов за один выстрел")]
@@ -14,7 +14,7 @@ namespace _00_Scripts.Game.Weapon.Strategies
     [Tooltip("Общий угол разброса в градусах")]
     public float spreadAngle = 30f;
 
-    public override Projectile[] Fire(Vector3 position, Quaternion rotation, WeaponData data)
+    public override Projectile[] Fire(Vector3 position, Quaternion rotation, WeaponData data, float velocityMultiplier = 1f, float damageMultiplier = 1f)
     {
       var pellets = new Projectile[pelletCount];
 
@@ -28,7 +28,7 @@ namespace _00_Scripts.Game.Weapon.Strategies
         // Инстанцируем и инициализируем
         var go = Instantiate(data.projectilePrefab, position, pelletRot).gameObject;
         var proj = go.GetComponent<Projectile>();
-        proj.Init(data.projectileSpeed, data.damage);
+        proj.Init(data.projectileSpeed * velocityMultiplier, data.damage * damageMultiplier);
 
         pellets[i] = proj;
       }

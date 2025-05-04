@@ -4,7 +4,7 @@ namespace _00_Scripts.Game.Entity
 {
   [CreateAssetMenu(
     fileName = "Default Entity Stats",
-    menuName = "game/Default Entity Stats",
+    menuName = "Game/Entity/Default Entity Stats",
     order = 0
   )]
   public class DefaultStats : ScriptableObject, IStats

@@ -55,7 +55,7 @@ namespace _00_Scripts.Game.Entity
     {
       CurrentStats.TakeDamage(damage);
 
-      _healthPercentage.Value = Mathf.Round(CurrentHealthPercentage * 10) / 10;
+      _healthPercentage.Value = Mathf.Round(CurrentHealthPercentage * 100) / 100;
     }
   }
 }

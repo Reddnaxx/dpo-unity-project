@@ -55,7 +55,7 @@ namespace _00_Scripts.Game.Weapon.Projectiles
         /// <param name="velocity">Скорость полёта</param>
         /// <param name="damage">Урон при попадании</param>
         /// <param name="lifetimeOverride">Опционально задать время жизни</param>
-        public void Init(float velocity, float damage, float lifetimeOverride = -1f)
+        public virtual void Init(float velocity, float damage, float lifetimeOverride = -1f)
         {
             Velocity = velocity;
             Damage = damage;

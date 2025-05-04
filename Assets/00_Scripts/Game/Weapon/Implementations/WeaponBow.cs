@@ -15,8 +15,7 @@ namespace _00_Scripts.Game.Weapon.Implementations
 {
   public class WeaponBow : Core.Weapon
   {
-    [Header("Bow Settings")]
-    private BowWeaponData BowData => data as BowWeaponData;
+    [Header("Bow Settings")] private BowWeaponData BowData => data as BowWeaponData;
 
     [Header("Arrow Visuals")] [SerializeField]
     private SpriteRenderer arrowBody;
@@ -128,13 +127,10 @@ namespace _00_Scripts.Game.Weapon.Implementations
       var ratio = Mathf.Clamp01(_chargeTime / BowData.maxChargeTime);
       if (ratio < BowData.chargeRatioThreshold) return;
 
-      // Инстанцируем снаряд и устанавливаем параметры
-      var projGO = Instantiate(data.projectilePrefab, firePoint.position, transform.rotation);
-      var proj = projGO.GetComponent<Projectile>();
-      proj.Init(
-        data.projectileSpeed * BowData.velocityMultiplierCurve.Evaluate(ratio),
-        data.damage * BowData.damageMultiplierCurve.Evaluate(ratio)
-      );
+      var velocityMultiplier = BowData.velocityMultiplierCurve.Evaluate(ratio);
+      var damageMultiplier = BowData.damageMultiplierCurve.Evaluate(ratio);
+
+      BowData.fireStrategy.Fire(firePoint.position, transform.rotation, BowData, velocityMultiplier, damageMultiplier);
 
       // Визуальный эффект и звук выстрела
       if (shootSound)

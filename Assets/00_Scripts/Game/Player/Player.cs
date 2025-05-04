@@ -34,23 +34,27 @@ namespace _00_Scripts.Game.Player
         .AddTo(this);
 
       playerLevel.Level
+        .Where(lvl => lvl > 1)
         .Subscribe(OnLevelUp)
         .AddTo(this);
+
+      EventBus.On<EnemyDeathEvent>()
+        .Subscribe(evt => playerLevel.AddExperience(evt.ExperiencePoints));
     }
 
     protected override void Start()
     {
       base.Start();
 
-      playerLevel.AddExperience(1000);
-      TakeDamage(10);
+      playerLevel.AddExperience(0);
+      TakeDamage(0);
     }
 
     public override void TakeDamage(float damage)
     {
       base.TakeDamage(damage);
 
-      EventBus.Publish(new PlayerHPChangeEvent(CurrentStats.Health, CurrentStats.MaxHealth));
+      EventBus.Publish(new PlayerHpChangeEvent(CurrentStats.Health, CurrentStats.MaxHealth));
     }
 
     private void OnExperienceChanged(float experience, float nextExperience, int level)
@@ -60,7 +64,7 @@ namespace _00_Scripts.Game.Player
 
     private void OnLevelUp(int level)
     {
-      Debug.Log($"Player leveled up to level {level}");
+      EventBus.Publish(new PlayerLevelUpEvent(level));
     }
   }
 }

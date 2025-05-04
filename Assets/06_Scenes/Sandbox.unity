@@ -374,6 +374,7 @@ GameObject:
   m_Component:
   - component: {fileID: 571426469}
   - component: {fileID: 571426470}
+  - component: {fileID: 571426471}
   m_Layer: 0
   m_Name: EntryPoint
   m_TagString: Untagged
@@ -409,6 +410,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiScreen: {fileID: 872076321183869831, guid: 89c68f0bdc82396459cc467942003e19, type: 3}
+--- !u!114 &571426471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571426467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168d9c8093e141f997971c9af067eff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelUpRewardUIPrefab: {fileID: 872076321183869831, guid: 47e97e2040d0fbe4e810cbf9edd3b282, type: 3}
 --- !u!1 &829247859
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+
 using _00_Scripts.Game.Items;
+
 using UnityEngine;
 
 namespace _00_Scripts.Game.Entity
@@ -21,8 +23,7 @@ namespace _00_Scripts.Game.Entity
     [field: SerializeField] public float Attack { get; private set; }
     [field: SerializeField] public float Speed { get; private set; }
 
-    [field: SerializeField]
-    public float PhysicalResistance { get; private set; }
+    [field: SerializeField] public float PhysicalResistance { get; private set; }
 
     [field: SerializeField] public float FireResistance { get; private set; }
     [field: SerializeField] public float IceResistance { get; private set; }
@@ -56,7 +57,7 @@ namespace _00_Scripts.Game.Entity
 
     public void ApplyItem(Item item)
     {
-      var tempStats = item.Upgrades
+      var tempStats = item.upgrades
         .Select(upgrade => ApplyUpgrade(upgrade) - this);
 
       var aggregatedStats = tempStats.Aggregate((a, b) => a + b);
@@ -74,49 +75,49 @@ namespace _00_Scripts.Game.Entity
     {
       var tempStats = new Stats(this);
 
-      switch (upgrade.Type)
+      switch (upgrade.type)
       {
         case UpgradeType.Health:
-          UpgradeHealth(tempStats, upgrade.Value);
+          UpgradeHealth(tempStats, upgrade.value);
           break;
         case UpgradeType.Attack:
-          tempStats.Attack += upgrade.Value;
+          tempStats.Attack += upgrade.value;
           break;
         case UpgradeType.PhysicalResistance:
-          tempStats.PhysicalResistance += upgrade.Value;
+          tempStats.PhysicalResistance += upgrade.value;
           break;
         case UpgradeType.Speed:
-          tempStats.Speed += upgrade.Value;
+          tempStats.Speed += upgrade.value;
           break;
         case UpgradeType.FireResistance:
-          tempStats.FireResistance += upgrade.Value;
+          tempStats.FireResistance += upgrade.value;
           break;
         case UpgradeType.IceResistance:
-          tempStats.IceResistance += upgrade.Value;
+          tempStats.IceResistance += upgrade.value;
           break;
         case UpgradeType.PoisonResistance:
-          tempStats.PoisonResistance += upgrade.Value;
+          tempStats.PoisonResistance += upgrade.value;
           break;
         case UpgradeType.HealthMultiplier:
-          UpgradeHealth(tempStats, upgrade.Value, true);
+          UpgradeHealth(tempStats, upgrade.value, true);
           break;
         case UpgradeType.AttackMultiplier:
-          tempStats.Attack *= upgrade.Value;
+          tempStats.Attack *= upgrade.value;
           break;
         case UpgradeType.SpeedMultiplier:
-          tempStats.Speed *= upgrade.Value;
+          tempStats.Speed *= upgrade.value;
           break;
         case UpgradeType.PhysicalResistanceMultiplier:
-          tempStats.PhysicalResistance *= upgrade.Value;
+          tempStats.PhysicalResistance *= upgrade.value;
           break;
         case UpgradeType.FireResistanceMultiplier:
-          tempStats.FireResistance *= upgrade.Value;
+          tempStats.FireResistance *= upgrade.value;
           break;
         case UpgradeType.IceResistanceMultiplier:
-          tempStats.IceResistance *= upgrade.Value;
+          tempStats.IceResistance *= upgrade.value;
           break;
         case UpgradeType.PoisonResistanceMultiplier:
-          tempStats.PoisonResistance *= upgrade.Value;
+          tempStats.PoisonResistance *= upgrade.value;
           break;
         default:
           throw new ArgumentOutOfRangeException();

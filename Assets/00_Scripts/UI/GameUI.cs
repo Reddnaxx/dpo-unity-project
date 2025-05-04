@@ -25,14 +25,12 @@ namespace _00_Scripts.UI
       EventBus.On<PlayerExpChangeEvent>()
         .Subscribe(evt => UpdateExperience(evt.CurrentExperience, evt.ExperienceToNextLevel, evt.CurrentLevel));
 
-      EventBus.On<PlayerHPChangeEvent>()
+      EventBus.On<PlayerHpChangeEvent>()
         .Subscribe(evt => UpdateHealth(evt.CurrentHealth, evt.MaxHealth));
     }
 
     private void UpdateHealth(float health, float maxHealth)
     {
-      Debug.Log("Health updated: " + health + " / " + maxHealth);
-
       healthText.text = $"HP: {health} / {maxHealth}";
 
       healthBar.fillAmount = health / maxHealth;
@@ -40,9 +38,6 @@ namespace _00_Scripts.UI
 
     private void UpdateExperience(float experience, float experienceToNextLevel, int level)
     {
-      Debug.Log("Experience updated: " + experience + " / " +
-                experienceToNextLevel + " (Level: " + level + ")");
-
       levelText.text = $"Уровень: {level}";
 
       experienceText.text = $"Опыт: {experience} / {experienceToNextLevel}";

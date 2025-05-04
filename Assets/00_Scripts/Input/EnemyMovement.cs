@@ -9,11 +9,11 @@ namespace _00_Scripts.Input
 
     private void Update()
     {
-      if (player == null) return;
+      if (!player) return;
 
       var direction = (player.position - transform.position).normalized;
 
-      transform.position += direction * speed * Time.deltaTime;
+      transform.position += direction * (speed * Time.deltaTime);
     }
   }
 }

@@ -32,8 +32,8 @@ csharp_space_inside_parentheses = never
 
 # ========== Однострочные блоки ==========
 # Разрешить или запрещать однострочные тела
-csharp_preserve_single_line_blocks = false
-csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
 
 # ========== Область using ==========
 # Отделять внешние using от Unity-специфичных

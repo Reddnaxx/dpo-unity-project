@@ -1,10 +1,14 @@
 using System;
 using System.Collections;
+
 using _00_Scripts.Constants;
 using _00_Scripts.UI;
+
 using UniRx;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 using Object = UnityEngine.Object;
 
 namespace _00_Scripts.Scenes

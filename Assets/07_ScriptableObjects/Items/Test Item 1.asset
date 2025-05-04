@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6f6c371db641c9a4cafecd263e8762, type: 3}
+  m_Name: Test Item 1
+  m_EditorClassIdentifier: 
+  itemName: "Trallallero Trallall\xE0"
+  upgrades:
+  - {fileID: 11400000, guid: 4f1e41dde630921498970b543f75a848, type: 2}
+  icon: {fileID: -7672087129735864097, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
+  description: "Tralalero Tralala (rarely \u201CTralalelo Tralala\u201D) (Italian:
+    Trallallero Trallall\xE0) is one of the original italian brainrot animals.\r\nHe
+    has a grandmother, Ornella Leccacappella, and a son, Merdardo, who is friends
+    with Zip Zip Gnoccolino, and another son called Breadfolimo Bereaminnini"

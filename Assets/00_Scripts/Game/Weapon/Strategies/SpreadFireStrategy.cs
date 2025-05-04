@@ -14,7 +14,8 @@ namespace _00_Scripts.Game.Weapon.Strategies
     [Tooltip("Общий угол разброса в градусах")]
     public float spreadAngle = 30f;
 
-    public override Projectile[] Fire(Vector3 position, Quaternion rotation, WeaponData data, float velocityMultiplier = 1f, float damageMultiplier = 1f)
+    public override Projectile[] Fire(Vector3 position, Quaternion rotation, WeaponData data,
+      float velocityMultiplier = 1f, float damageMultiplier = 1f)
     {
       var pellets = new Projectile[pelletCount];
 

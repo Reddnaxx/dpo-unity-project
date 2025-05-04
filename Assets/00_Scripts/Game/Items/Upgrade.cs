@@ -1,4 +1,4 @@
-using System;
+using UnityEngine;
 
 namespace _00_Scripts.Game.Items
 {
@@ -20,16 +20,10 @@ namespace _00_Scripts.Game.Items
     PoisonResistanceMultiplier
   }
 
-  [Serializable]
-  public class Upgrade
+  [CreateAssetMenu(fileName = "Upgrade", menuName = "Game/Items/Upgrade")]
+  public class Upgrade: ScriptableObject
   {
-        public UpgradeType Type { get; }
-            public float Value { get; }
-
-        public Upgrade(UpgradeType type, float value)
-    {
-      Type = type;
-      Value = value;
-    }
+    public UpgradeType type;
+    public float value;
   }
 }

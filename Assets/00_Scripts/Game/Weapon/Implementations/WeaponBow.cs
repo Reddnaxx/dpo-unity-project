@@ -15,14 +15,21 @@ namespace _00_Scripts.Game.Weapon.Implementations
 {
   public class WeaponBow : Core.Weapon
   {
-    [Header("Bow Settings")] private BowWeaponData BowData => data as BowWeaponData;
+    [Header("Bow Settings")] 
+    private BowWeaponData BowData => data as BowWeaponData;
 
-    [Header("Arrow Visuals")] [SerializeField]
+    [Header("Arrow Visuals")] 
+    [SerializeField]
     private SpriteRenderer arrowBody;
 
     [SerializeField] private float arrowChargeOffset = 0.5f;
     [SerializeField] private float arrowChargeStep = 4f;
     [SerializeField] private List<Sprite> bowChargeSprites;
+
+    [Header("Bow Sounds")]
+    [SerializeField] private AudioClip bowDrawSound;
+    [SerializeField] private AudioClip bowShootSound;
+    [SerializeField] private AudioSource audioSource;
 
     private Vector3 _arrowDefaultLocalPosition;
     private bool _isCharging;
@@ -83,6 +90,10 @@ namespace _00_Scripts.Game.Weapon.Implementations
       _isCharging = true;
       _chargeTime = 0f;
 
+      // Проигрываем звук натягивания тетивы
+      if (bowDrawSound != null && audioSource != null)
+        audioSource.PlayOneShot(bowDrawSound);
+
       _chargeSubscription = Observable.EveryUpdate()
         .Subscribe(_ =>
         {
@@ -132,9 +143,9 @@ namespace _00_Scripts.Game.Weapon.Implementations
 
       BowData.fireStrategy.Fire(firePoint.position, transform.rotation, BowData, velocityMultiplier, damageMultiplier);
 
-      // Визуальный эффект и звук выстрела
-      if (shootSound)
-        AudioSource.PlayOneShot(shootSound);
+      // Проигрываем звук выстрела
+      if (bowShootSound != null && audioSource != null)
+        audioSource.PlayOneShot(bowShootSound);
     }
   }
 }

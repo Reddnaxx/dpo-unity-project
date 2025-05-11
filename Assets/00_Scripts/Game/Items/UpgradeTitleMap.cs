@@ -5,57 +5,80 @@ namespace _00_Scripts.Game.Items
 {
   public static class UpgradeTitleMap
   {
-    private static readonly Dictionary<UpgradeType, string> UpgradeTitles = new()
+    private static readonly Dictionary<StatUpgradeType, string> UpgradeTitles = new()
     {
-      { UpgradeType.Health, "Здоровье" },
-      { UpgradeType.HealthMultiplier, "Здоровье" },
-      { UpgradeType.Attack, "Урон" },
-      { UpgradeType.AttackMultiplier, "Урон" },
-      { UpgradeType.Speed, "Скорость" },
-      { UpgradeType.SpeedMultiplier, "Скорость" },
-      { UpgradeType.PhysicalResistance, "Сопротивление физическому урону" },
-      { UpgradeType.FireResistance, "Сопротивление огненному урону" },
-      { UpgradeType.IceResistance, "Сопротивление ледяному урону" },
-      { UpgradeType.PoisonResistance, "Сопротивление ядовитому урону" },
+      { StatUpgradeType.Health, "Здоровье" },
+      { StatUpgradeType.HealthMultiplier, "Здоровье" },
+      { StatUpgradeType.Attack, "Урон" },
+      { StatUpgradeType.AttackMultiplier, "Урон" },
+      { StatUpgradeType.Speed, "Скорость" },
+      { StatUpgradeType.SpeedMultiplier, "Скорость" },
+      { StatUpgradeType.PhysicalResistance, "Сопротивление физическому урону" },
+      { StatUpgradeType.FireResistance, "Сопротивление огненному урону" },
+      { StatUpgradeType.IceResistance, "Сопротивление ледяному урону" },
+      { StatUpgradeType.PoisonResistance, "Сопротивление ядовитому урону" },
     };
 
-    public static string GetTitle(UpgradeType upgrade)
-      => UpgradeTitles.GetValueOrDefault(upgrade, "Unknown Upgrade");
+    private static readonly Dictionary<WeaponUpgradeType, string> WeaponUpgradeTitles = new()
+    {
+      { WeaponUpgradeType.Homing, "Самонаводящиеся снаряды" },
+      { WeaponUpgradeType.Bounce, "Отскакивающие снаряды" },
+    };
 
-    public static string GetDescription(UpgradeType upgrade, float value)
+    public static string GetTitle(Upgrade upgrade)
+    {
+      return upgrade.category == UpgradeCategory.Weapon
+        ? WeaponUpgradeTitles.GetValueOrDefault(upgrade.weaponType, "Unknown Weapon Upgrade")
+        : UpgradeTitles.GetValueOrDefault(upgrade.statType, "Unknown Upgrade");
+    }
+
+    private static string GetStatDescription(Upgrade upgrade)
     {
       var isMultiplier = IsMultiplier(upgrade);
-      var isNegative = (isMultiplier && value >= 1) || (!isMultiplier && value > 0);
+      var isNegative = (isMultiplier && upgrade.value >= 1) || (!isMultiplier && upgrade.value > 0);
 
       var verb = isNegative
         ? "Увеличивает"
         : "Уменьшает";
 
-      var absValue = Math.Abs(value);
       var title = GetTitle(upgrade).ToLowerInvariant();
-      var rawFormatted = FormatValue(upgrade, absValue);
+      var rawFormatted = FormatValue(upgrade);
       var color = isNegative ? "green" : "red";
       var coloredValue = $"<color={color}>{rawFormatted}</color>";
 
       return $"{verb} {title} на {coloredValue}";
     }
 
-    private static string FormatValue(UpgradeType upgrade, float value)
+    private static string GetWeaponUpgradeDescription(Upgrade upgrade)
+    {
+      var title = GetTitle(upgrade).ToLowerInvariant();
+
+      return $"Добавляет <color=green>{title}</color>";
+    }
+
+    public static string GetDescription(Upgrade upgrade)
+    {
+      return upgrade.category == UpgradeCategory.Weapon
+        ? GetWeaponUpgradeDescription(upgrade)
+        : GetStatDescription(upgrade);
+    }
+
+    private static string FormatValue(Upgrade upgrade)
     {
       if (IsResistance(upgrade))
       {
-        return $"{Math.Abs(value * 100f):0.#}%";
+        return $"{Math.Abs(upgrade.value * 100f):0.#}%";
       }
 
       return IsMultiplier(upgrade)
-        ? $"{Math.Abs((value - 1f) * 100f):0.#}%"
-        : $"{Math.Abs(value):0.#}";
+        ? $"{Math.Abs((upgrade.value - 1f) * 100f):0.#}%"
+        : $"{Math.Abs(upgrade.value):0.#}";
     }
 
-    private static bool IsMultiplier(UpgradeType upgrade) =>
-      upgrade.ToString().Contains("multiplier", StringComparison.OrdinalIgnoreCase);
+    private static bool IsMultiplier(Upgrade upgrade) =>
+      upgrade.statType.ToString().Contains("multiplier", StringComparison.OrdinalIgnoreCase);
 
-    private static bool IsResistance(UpgradeType upgrade) =>
-      upgrade.ToString().Contains("resistance", StringComparison.OrdinalIgnoreCase);
+    private static bool IsResistance(Upgrade upgrade) =>
+      upgrade.statType.ToString().Contains("resistance", StringComparison.OrdinalIgnoreCase);
   }
 }

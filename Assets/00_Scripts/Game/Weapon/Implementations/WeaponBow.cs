@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Game.Weapon.Projectiles;
+using _00_Scripts.Game.Weapon.Projectiles.Modules;
 using _00_Scripts.Helpers;
 
 using DG.Tweening;
@@ -130,7 +131,22 @@ namespace _00_Scripts.Game.Weapon.Implementations
       var velocityMultiplier = BowData.velocityMultiplierCurve.Evaluate(ratio);
       var damageMultiplier = BowData.damageMultiplierCurve.Evaluate(ratio);
 
-      BowData.fireStrategy.Fire(firePoint.position, transform.rotation, BowData, velocityMultiplier, damageMultiplier);
+      var projectiles = BowData.fireStrategy.Fire(firePoint.position, transform.rotation, BowData, velocityMultiplier,
+        damageMultiplier);
+
+      foreach (var projectile in projectiles)
+      {
+        if (PlayerStats.HasHoming)
+        {
+          projectile.AddModule<HomingModule>();
+        }
+
+        if (PlayerStats.HasBounce)
+        {
+          projectile.AddModule<BounceModule>();
+          projectile.destroyOnHit = false;
+        }
+      }
 
       // Визуальный эффект и звук выстрела
       if (shootSound)

@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace _00_Scripts.Game.Weapon.Implementations
 {
-  [RequireComponent(typeof(Collider2D))]
   public class WeaponMagicBook : Core.Weapon
   {
     [Header("Magic Book Settings")] [SerializeField]
@@ -103,7 +102,6 @@ namespace _00_Scripts.Game.Weapon.Implementations
       var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
       transform.rotation = Quaternion.Euler(0, 0, angle);
 
-      // Выстрел через базовый метод (fireStrategy, muzzleFlash, звук)
       DoFire();
     }
 

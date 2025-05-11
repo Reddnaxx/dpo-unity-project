@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: Test Item 2
   m_EditorClassIdentifier: 
   itemName: Tung Tung Tung Sahur
-  upgrades:
-  - type: 5
-    value: 1.1
-  - type: 1
-    value: 0.95
   icon: {fileID: 4039527258408786561, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
-  description: Tung Tung Tung Tung Tung Sahur is a terrifying anomaly in the form
-    of a night patrol drum. Legend has it that if you are called for Sahur three
-    times and don't respond, it will appear and haunt you. Its sound resembles that
-    of a beating drum, "tung tung tung."
+  upgrades:
+  - category: 0
+    statType: 4
+    weaponType: 0
+    value: 1.1
+  - category: 0
+    statType: 1
+    weaponType: 0
+    value: 0.95
+  - category: 1
+    statType: 1
+    weaponType: 1
+    value: 0.95

@@ -2,7 +2,13 @@ using System;
 
 namespace _00_Scripts.Game.Items
 {
-  public enum UpgradeType
+  public enum UpgradeCategory
+  {
+    Stat,
+    Weapon
+  }
+
+  public enum StatUpgradeType
   {
     Health,
     HealthMultiplier,
@@ -16,10 +22,20 @@ namespace _00_Scripts.Game.Items
     PoisonResistance,
   }
 
+  public enum WeaponUpgradeType
+  {
+    Homing,
+    Bounce
+  }
+
   [Serializable]
   public class Upgrade
   {
-    public UpgradeType type;
+    public UpgradeCategory category;
+
+    public StatUpgradeType statType;
+    public WeaponUpgradeType weaponType;
+
     public float value;
   }
 }

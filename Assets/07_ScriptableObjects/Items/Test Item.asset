@@ -15,7 +15,11 @@ MonoBehaviour:
   itemName: Bombardiro Crocodilo
   icon: {fileID: 7790102585781162631, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
   upgrades:
-  - type: 8
+  - category: 0
+    statType: 7
+    weaponType: 0
     value: 0.15
-  - type: 7
+  - category: 0
+    statType: 8
+    weaponType: 0
     value: -0.05

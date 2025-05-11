@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Test Item 1
   m_EditorClassIdentifier: 
   itemName: "Trallallero Trallall\xE0"
-  upgrades:
-  - type: 3
-    value: 1.15
-  - type: 0
-    value: -5
   icon: {fileID: -7672087129735864097, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
-  description: "Tralalero Tralala (rarely \u201CTralalelo Tralala\u201D) (Italian:
-    Trallallero Trallall\xE0) is one of the original italian brainrot animals.\r\nHe
-    has a grandmother, Ornella Leccacappella, and a son, Merdardo, who is friends
-    with Zip Zip Gnoccolino, and another son called Breadfolimo Bereaminnini"
+  upgrades:
+  - category: 0
+    statType: 0
+    weaponType: 0
+    value: 1.15
+  - category: 1
+    statType: 0
+    weaponType: 0
+    value: -5

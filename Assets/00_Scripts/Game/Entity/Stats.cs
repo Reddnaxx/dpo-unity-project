@@ -29,6 +29,9 @@ namespace _00_Scripts.Game.Entity
     [field: SerializeField] public float IceResistance { get; private set; }
     [field: SerializeField] public float PoisonResistance { get; private set; }
 
+    [field: SerializeField] public bool HasHoming { get; private set; }
+    [field: SerializeField] public bool HasBounce { get; private set; }
+
     public Stats(IStats stats)
     {
       Health = stats.Health;
@@ -43,7 +46,7 @@ namespace _00_Scripts.Game.Entity
 
     public Stats(float health, float attack, float speed,
       float physicalResistance = 0.05f, float fireResistance = 0,
-      float iceResistance = 0, float poisonResistance = 0)
+      float iceResistance = 0, float poisonResistance = 0, bool hasHoming = false, bool hasBounce = false)
     {
       Health = health;
       MaxHealth = health;
@@ -53,6 +56,8 @@ namespace _00_Scripts.Game.Entity
       FireResistance = fireResistance;
       IceResistance = iceResistance;
       PoisonResistance = poisonResistance;
+      HasHoming = hasHoming;
+      HasBounce = hasBounce;
     }
 
     public void ApplyItem(Item item)
@@ -61,6 +66,7 @@ namespace _00_Scripts.Game.Entity
         .Select(upgrade => ApplyUpgrade(upgrade) - this);
 
       var aggregatedStats = tempStats.Aggregate((a, b) => a + b);
+
       Health += aggregatedStats.Health;
       MaxHealth += aggregatedStats.MaxHealth;
       Attack += aggregatedStats.Attack;
@@ -69,42 +75,61 @@ namespace _00_Scripts.Game.Entity
       FireResistance += aggregatedStats.FireResistance;
       IceResistance += aggregatedStats.IceResistance;
       PoisonResistance += aggregatedStats.PoisonResistance;
+      HasHoming = aggregatedStats.HasHoming;
+      HasBounce = aggregatedStats.HasBounce;
     }
 
     private Stats ApplyUpgrade(Upgrade upgrade)
     {
       var tempStats = new Stats(this);
 
-      switch (upgrade.type)
+      if (upgrade.category == UpgradeCategory.Weapon)
       {
-        case UpgradeType.Health:
+        switch (upgrade.weaponType)
+        {
+          case WeaponUpgradeType.Homing:
+            tempStats.HasHoming = true;
+            break;
+          case WeaponUpgradeType.Bounce:
+            tempStats.HasBounce = true;
+            break;
+          default:
+            throw new ArgumentException("Weapon upgrade type not found");
+        }
+
+        return tempStats;
+      }
+
+      switch (upgrade.statType)
+      {
+        case StatUpgradeType.Health:
           UpgradeHealth(tempStats, upgrade.value);
           break;
-        case UpgradeType.Attack:
+        case StatUpgradeType.Attack:
           tempStats.Attack += upgrade.value;
           break;
-        case UpgradeType.PhysicalResistance:
+        case StatUpgradeType.PhysicalResistance:
           tempStats.PhysicalResistance += upgrade.value;
           break;
-        case UpgradeType.Speed:
+        case StatUpgradeType.Speed:
           tempStats.Speed += upgrade.value;
           break;
-        case UpgradeType.FireResistance:
+        case StatUpgradeType.FireResistance:
           tempStats.FireResistance += upgrade.value;
           break;
-        case UpgradeType.IceResistance:
+        case StatUpgradeType.IceResistance:
           tempStats.IceResistance += upgrade.value;
           break;
-        case UpgradeType.PoisonResistance:
+        case StatUpgradeType.PoisonResistance:
           tempStats.PoisonResistance += upgrade.value;
           break;
-        case UpgradeType.HealthMultiplier:
+        case StatUpgradeType.HealthMultiplier:
           UpgradeHealth(tempStats, upgrade.value, true);
           break;
-        case UpgradeType.AttackMultiplier:
+        case StatUpgradeType.AttackMultiplier:
           tempStats.Attack *= upgrade.value;
           break;
-        case UpgradeType.SpeedMultiplier:
+        case StatUpgradeType.SpeedMultiplier:
           tempStats.Speed *= upgrade.value;
           break;
         default:
@@ -139,7 +164,8 @@ namespace _00_Scripts.Game.Entity
       else
         stats.MaxHealth += value;
 
-      stats.Health = stats.MaxHealth * currentPercent;
+      stats.MaxHealth = Mathf.Round(stats.MaxHealth * 10) / 10;
+      stats.Health = Mathf.Round(stats.MaxHealth * currentPercent * 10) / 10;
     }
 
     public static Stats operator +(Stats a, Stats b)
@@ -151,7 +177,9 @@ namespace _00_Scripts.Game.Entity
         a.PhysicalResistance + b.PhysicalResistance,
         a.FireResistance + b.FireResistance,
         a.IceResistance + b.IceResistance,
-        a.PoisonResistance + b.PoisonResistance
+        a.PoisonResistance + b.PoisonResistance,
+        a.HasHoming || b.HasHoming,
+        a.HasBounce || b.HasBounce
       );
     }
 
@@ -164,7 +192,9 @@ namespace _00_Scripts.Game.Entity
         a.PhysicalResistance - b.PhysicalResistance,
         a.FireResistance - b.FireResistance,
         a.IceResistance - b.IceResistance,
-        a.PoisonResistance - b.PoisonResistance
+        a.PoisonResistance - b.PoisonResistance,
+        a.HasHoming,
+        a.HasBounce
       );
     }
   }

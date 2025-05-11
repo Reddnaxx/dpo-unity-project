@@ -15,7 +15,11 @@ MonoBehaviour:
   itemName: Brr Brr Patapim
   icon: {fileID: 8812079278837170296, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
   upgrades:
-  - type: 6
+  - category: 0
+    statType: 1
+    weaponType: 0
     value: 0.1
-  - type: 3
+  - category: 0
+    statType: 3
+    weaponType: 0
     value: 0.95

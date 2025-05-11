@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Bow Weapon Data
   m_EditorClassIdentifier: 
   fireStrategy: {fileID: 11400000, guid: 0c54aba3a0fb67d4293701d38d916252, type: 2}
-  fireRate: 1
+  fireRate: 0.85
   orderChangeAngle: 60
   followTime: 0.2
-  projectilePrefab: {fileID: -2759282419835877806, guid: c62efbd0d053a714ba99d6d06c96f360, type: 3}
+  projectilePrefab: {fileID: -7433762558808552424, guid: 05fe027185b22344dbbde103a70f4d91, type: 3}
   projectileSpeed: 8
   damage: 18
   maxChargeTime: 0.75

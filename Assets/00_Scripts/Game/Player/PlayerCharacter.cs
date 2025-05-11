@@ -50,6 +50,8 @@ namespace _00_Scripts.Game.Player
         {
           _inventory.AddItem(evt.NewItem);
           Stats = CurrentStats = _inventory.GetFinalStats(CurrentStats);
+
+          EventBus.Publish(new PlayerHpChangeEvent(CurrentStats.Health, CurrentStats.MaxHealth));
         });
     }
 

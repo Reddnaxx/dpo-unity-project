@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+
 using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Game.Weapon.Projectiles;
+using _00_Scripts.Game.Weapon.Projectiles.Modules;
 
 using UnityEngine;
 
@@ -29,7 +33,11 @@ namespace _00_Scripts.Game.Weapon.Strategies
         // Инстанцируем и инициализируем
         var go = Instantiate(data.projectilePrefab, position, pelletRot).gameObject;
         var proj = go.GetComponent<Projectile>();
-        proj.Init(data.projectileSpeed * velocityMultiplier, data.damage * damageMultiplier);
+
+        proj.Init(
+          data.projectileSpeed * velocityMultiplier,
+          data.damage * damageMultiplier
+        );
 
         pellets[i] = proj;
       }

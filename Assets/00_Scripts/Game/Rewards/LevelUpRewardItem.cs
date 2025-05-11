@@ -44,7 +44,7 @@ namespace _00_Scripts.Game.Rewards
 
       foreach (var upgrade in item.upgrades)
       {
-        result.AppendLine(UpgradeTitleMap.GetDescription(upgrade.type, upgrade.value));
+        result.AppendLine(UpgradeTitleMap.GetDescription(upgrade));
       }
 
       return result.ToString();

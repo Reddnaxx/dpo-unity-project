@@ -1,5 +1,8 @@
 using System;
 
+using _00_Scripts.Game.Entity;
+using _00_Scripts.Game.Player;
+using _00_Scripts.Game.Weapon.Projectiles.Modules;
 using _00_Scripts.Helpers;
 
 using DG.Tweening;
@@ -25,6 +28,8 @@ namespace _00_Scripts.Game.Weapon.Core
     protected InputAction AttackAction;
     private CompositeDisposable _disposables;
     protected AudioSource AudioSource;
+
+    protected static IStats PlayerStats => PlayerCharacter.Stats;
 
     protected virtual void Awake()
     {
@@ -74,7 +79,21 @@ namespace _00_Scripts.Game.Weapon.Core
     /// </summary>
     protected virtual void DoFire()
     {
-      data.fireStrategy.Fire(firePoint.position, firePoint.rotation, data);
+      var projectiles = data.fireStrategy.Fire(firePoint.position, firePoint.rotation, data);
+
+      foreach (var projectile in projectiles)
+      {
+        if (PlayerStats.HasHoming)
+        {
+          projectile.AddModule<HomingModule>();
+        }
+
+        if (PlayerStats.HasBounce)
+        {
+          projectile.AddModule<BounceModule>();
+          projectile.destroyOnHit = false;
+        }
+      }
 
       if (shootSound)
       {

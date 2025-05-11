@@ -1,7 +1,9 @@
+using System;
+using System.Collections.Generic;
+
 using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Game.Weapon.Projectiles;
-
-using Unity.VisualScripting;
+using _00_Scripts.Game.Weapon.Projectiles.Modules;
 
 using UnityEngine;
 
@@ -16,7 +18,12 @@ namespace _00_Scripts.Game.Weapon.Strategies
       // Инстанцируем один снаряд
       var instantiated = Instantiate(data.projectilePrefab, position, rotation);
       var proj = instantiated.GetComponent<Projectile>();
-      proj.Init(data.projectileSpeed * velocityMultiplier, data.damage * damageMultiplier);
+
+      proj.Init(
+        data.projectileSpeed * velocityMultiplier,
+        data.damage * damageMultiplier
+      );
+
       return new[] { proj };
     }
   }

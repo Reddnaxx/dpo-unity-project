@@ -63,6 +63,8 @@ MonoBehaviour:
   experienceBar: {fileID: 3818131433861912194}
   healthText: {fileID: 3108062079509004473}
   healthBar: {fileID: 6014406478150874137}
+  itemPrefab: {fileID: -5911823759959300329, guid: 19e8e213fd699764da49e94482e28123, type: 3}
+  itemsList: {fileID: 0}
 --- !u!1 &1126005323640513220
 GameObject:
   m_ObjectHideFlags: 0

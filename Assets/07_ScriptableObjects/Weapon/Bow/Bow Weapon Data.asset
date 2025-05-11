@@ -15,11 +15,12 @@ MonoBehaviour:
   fireStrategy: {fileID: 11400000, guid: 0c54aba3a0fb67d4293701d38d916252, type: 2}
   fireRate: 1
   orderChangeAngle: 60
+  followTime: 0.2
   projectilePrefab: {fileID: -2759282419835877806, guid: c62efbd0d053a714ba99d6d06c96f360, type: 3}
-  projectileSpeed: 12
-  damage: 10
+  projectileSpeed: 8
+  damage: 18
   maxChargeTime: 0.75
-  chargeRatioThreshold: 0.1
+  chargeRatioThreshold: 0.6
   releaseTime: 0.1
   damageMultiplierCurve:
     serializedVersion: 2
@@ -27,20 +28,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.10543355
+      outSlope: 0.10543355
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.19666669
     - serializedVersion: 3
       time: 1
       value: 2
-      inSlope: 0
-      outSlope: 0
+      inSlope: 6.7860475
+      outSlope: 6.7860475
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.03333336
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -51,20 +52,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.10543355
+      outSlope: 0.10543355
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.19666669
     - serializedVersion: 3
       time: 1
       value: 2
-      inSlope: 0
-      outSlope: 0
+      inSlope: 6.7860475
+      outSlope: 6.7860475
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.03333336
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

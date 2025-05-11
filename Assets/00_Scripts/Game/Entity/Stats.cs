@@ -107,18 +107,6 @@ namespace _00_Scripts.Game.Entity
         case UpgradeType.SpeedMultiplier:
           tempStats.Speed *= upgrade.value;
           break;
-        case UpgradeType.PhysicalResistanceMultiplier:
-          tempStats.PhysicalResistance *= upgrade.value;
-          break;
-        case UpgradeType.FireResistanceMultiplier:
-          tempStats.FireResistance *= upgrade.value;
-          break;
-        case UpgradeType.IceResistanceMultiplier:
-          tempStats.IceResistance *= upgrade.value;
-          break;
-        case UpgradeType.PoisonResistanceMultiplier:
-          tempStats.PoisonResistance *= upgrade.value;
-          break;
         default:
           throw new ArgumentOutOfRangeException();
       }

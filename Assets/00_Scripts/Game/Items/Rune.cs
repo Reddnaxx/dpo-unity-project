@@ -1,67 +1,68 @@
 using UnityEngine;
 
-using _00_Scripts.Game.Player;
-
-public class Rune : MonoBehaviour
+namespace _00_Scripts.Game.Items
 {
-  [SerializeField] private GameObject hintText;
-  private bool isPlayerInRange = false;
-
-  private void Start()
+  public class Rune : MonoBehaviour
   {
-    if (hintText != null)
-    {
-      Debug.Log("HintText assigned: " + hintText.name);
-      hintText.SetActive(false);
-    }
-    else
-    {
-      Debug.LogWarning("HintText is not assigned in the Inspector!");
-    }
-  }
+    [SerializeField] private GameObject hintText;
+    private bool isPlayerInRange = false;
 
-  private void Update()
-  {
-    if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
+    private void Start()
     {
-      Debug.Log("E key pressed, collecting rune");
-      CollectRune();
-    }
-  }
-
-  private void OnTriggerEnter2D(Collider2D other)
-  {
-    Debug.Log("Trigger entered by: " + other.name);
-    if (other.CompareTag("Player"))
-    {
-      Debug.Log("Player entered rune trigger");
-      isPlayerInRange = true;
       if (hintText != null)
       {
-        hintText.SetActive(true);
-        Debug.Log("HintText activated");
-      }
-    }
-  }
-
-  private void OnTriggerExit2D(Collider2D other)
-  {
-    Debug.Log("Trigger exited by: " + other.name);
-    if (other.CompareTag("Player"))
-    {
-      Debug.Log("Player exited rune trigger");
-      isPlayerInRange = false;
-      if (hintText != null)
-      {
+        Debug.Log("HintText assigned: " + hintText.name);
         hintText.SetActive(false);
-        Debug.Log("HintText deactivated");
+      }
+      else
+      {
+        Debug.LogWarning("HintText is not assigned in the Inspector!");
       }
     }
-  }
 
-  private void CollectRune()
-  {
-    Debug.Log("Rune collected!");
-    Destroy(gameObject);
+    private void Update()
+    {
+      if (isPlayerInRange && UnityEngine.Input.GetKeyDown(KeyCode.E))
+      {
+        Debug.Log("E key pressed, collecting rune");
+        CollectRune();
+      }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+      Debug.Log("Trigger entered by: " + other.name);
+      if (other.CompareTag("Player"))
+      {
+        Debug.Log("Player entered rune trigger");
+        isPlayerInRange = true;
+        if (hintText != null)
+        {
+          hintText.SetActive(true);
+          Debug.Log("HintText activated");
+        }
+      }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+      Debug.Log("Trigger exited by: " + other.name);
+      if (other.CompareTag("Player"))
+      {
+        Debug.Log("Player exited rune trigger");
+        isPlayerInRange = false;
+        if (hintText != null)
+        {
+          hintText.SetActive(false);
+          Debug.Log("HintText deactivated");
+        }
+      }
+    }
+
+    private void CollectRune()
+    {
+      Debug.Log("Rune collected!");
+      Destroy(gameObject);
+    }
   }
 }

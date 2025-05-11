@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Test Item 3
   m_EditorClassIdentifier: 
   itemName: Brr Brr Patapim
-  upgrades:
-  - {fileID: 11400000, guid: 4f1e41dde630921498970b543f75a848, type: 2}
   icon: {fileID: 8812079278837170296, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
-  description: Brr Brr Patapim is one of the brainrot animals created by AI and published
-    on tiktok. He is the reincarnation of the great Sith Lord Darth Plagueis, who
-    after making a deal with Drrr Traaa Toucanni Toucannus was able to reincarnate
-    himself into the seemingly immortal Patapim.
+  upgrades:
+  - type: 6
+    value: 0.1
+  - type: 3
+    value: 0.95

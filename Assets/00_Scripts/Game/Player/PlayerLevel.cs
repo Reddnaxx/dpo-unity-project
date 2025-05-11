@@ -9,7 +9,7 @@ namespace _00_Scripts.Game.Player
   [Serializable]
   public class PlayerLevel
   {
-    [field: SerializeField] public float ExperienceToNextLevelModifier { get; } = 1.1f;
+    [field: SerializeField] public float ExperienceToNextLevelModifier { get; private set; } = 1.5f;
 
     public ReactiveProperty<int> Level { get; }
     public ReactiveProperty<float> CurrentExperience { get; }
@@ -25,14 +25,15 @@ namespace _00_Scripts.Game.Player
     {
       while (true)
       {
+        var nextLevelExpOld = ExperienceToNextLevel;
         CurrentExperience.Value += experience;
 
         if (CurrentExperience.Value < ExperienceToNextLevel) return;
+        
+        ExperienceToNextLevel = Mathf.RoundToInt(ExperienceToNextLevel * ExperienceToNextLevelModifier);
 
         Level.Value++;
-        CurrentExperience.Value -= ExperienceToNextLevel;
-
-        ExperienceToNextLevel = Mathf.RoundToInt(ExperienceToNextLevel * ExperienceToNextLevelModifier);
+        CurrentExperience.Value -= nextLevelExpOld;
 
         if (CurrentExperience.Value >= ExperienceToNextLevel)
         {

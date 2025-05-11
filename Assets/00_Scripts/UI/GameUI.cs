@@ -1,4 +1,6 @@
 using _00_Scripts.Events;
+using _00_Scripts.Game.Items;
+using _00_Scripts.Game.Player;
 using _00_Scripts.Helpers;
 
 using TMPro;
@@ -10,7 +12,7 @@ using UnityEngine.UI;
 
 namespace _00_Scripts.UI
 {
-  public class GameUI : MonoBehaviour
+  public class GameUI : UIFadeScreen
   {
     [SerializeField] private TMP_Text levelText;
 
@@ -20,8 +22,10 @@ namespace _00_Scripts.UI
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private Image healthBar;
 
-    private void Awake()
+    protected override void Awake()
     {
+      base.Awake();
+
       EventBus.On<PlayerExpChangeEvent>()
         .Subscribe(evt => UpdateExperience(evt.CurrentExperience, evt.ExperienceToNextLevel, evt.CurrentLevel));
 

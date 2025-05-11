@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using _00_Scripts.Events;
 using _00_Scripts.Game.Items;
+using _00_Scripts.Helpers;
 using _00_Scripts.UI;
 
 using UnityEngine;
@@ -9,7 +11,7 @@ using UnityEngine.InputSystem;
 
 namespace _00_Scripts.Game.Rewards
 {
-  public class LevelUpRewardsUI : MonoBehaviour
+  public class LevelUpRewardsUI : UIFadeScreen
   {
     [SerializeField] private LevelUpRewardsData data;
     [SerializeField] private Transform rewardsListUI;
@@ -21,8 +23,10 @@ namespace _00_Scripts.Game.Rewards
     private PlayerInput _playerInput;
     private UIRoot _uiRoot;
 
-    private void Awake()
+    protected override void Awake()
     {
+      base.Awake();
+      
       _uiRoot = FindFirstObjectByType<UIRoot>();
       _playerInput = FindFirstObjectByType<PlayerInput>();
       _rewards = new List<Item>();
@@ -36,13 +40,14 @@ namespace _00_Scripts.Game.Rewards
       UpdateUI();
     }
 
-    public void OnSelect(Item item)
+    private void OnSelect(Item item)
     {
-      Debug.Log(item.itemName);
       Time.timeScale = 1f;
 
       _playerInput.ActivateInput();
       _uiRoot.RemoveScreen(gameObject);
+
+      EventBus.Publish(new PlayerEquipItemEvent(item));
     }
 
     private void UpdateUI()

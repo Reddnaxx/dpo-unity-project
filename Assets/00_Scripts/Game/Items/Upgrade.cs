@@ -1,4 +1,4 @@
-using UnityEngine;
+using System;
 
 namespace _00_Scripts.Game.Items
 {
@@ -11,17 +11,13 @@ namespace _00_Scripts.Game.Items
     Speed,
     SpeedMultiplier,
     PhysicalResistance,
-    PhysicalResistanceMultiplier,
     FireResistance,
-    FireResistanceMultiplier,
     IceResistance,
-    IceResistanceMultiplier,
     PoisonResistance,
-    PoisonResistanceMultiplier
   }
 
-  [CreateAssetMenu(fileName = "Upgrade", menuName = "Game/Items/Upgrade")]
-  public class Upgrade: ScriptableObject
+  [Serializable]
+  public class Upgrade
   {
     public UpgradeType type;
     public float value;

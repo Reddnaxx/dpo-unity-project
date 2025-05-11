@@ -28,10 +28,17 @@ namespace _00_Scripts.UI
     {
       return Instantiate(newScreen, screens, false);
     }
-    
+
     public void RemoveScreen(GameObject screen)
     {
-      Destroy(screen);
+      if (screen.TryGetComponent<UIFadeScreen>(out var fadeScreen))
+      {
+        fadeScreen.Close();
+      }
+      else
+      {
+        Destroy(screen);
+      }
     }
 
     public void ShowLoaderSmooth(float time = FadeDuration)

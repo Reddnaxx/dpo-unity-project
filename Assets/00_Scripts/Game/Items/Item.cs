@@ -10,8 +10,7 @@ namespace _00_Scripts.Game.Items
   public class Item : ScriptableObject
   {
     public string itemName;
-    public List<Upgrade> upgrades;
     [CanBeNull] public Sprite icon;
-    [TextArea] public string description;
+    public List<Upgrade> upgrades;
   }
 }

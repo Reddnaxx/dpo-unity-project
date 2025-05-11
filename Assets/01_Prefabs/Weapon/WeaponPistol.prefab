@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 62a0ebfe4f065eb4ca0f55e0dc8edef0, type: 2}
-  fireStrategy: {fileID: 11400000, guid: 0c54aba3a0fb67d4293701d38d916252, type: 2}
   firePoint: {fileID: 3696077390312491851}
   shootSound: {fileID: 0}
   bodyRenderer: {fileID: 7557037186419905898}
@@ -253,8 +252,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1344173317
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 2860768655726451345, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

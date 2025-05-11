@@ -44,6 +44,7 @@ namespace _00_Scripts.Game.Weapon.Core
         .AddTo(_disposables);
 
       Observable.EveryUpdate()
+        .Where(_ => Time.timeScale > 0)
         .Subscribe(_ => UpdateAim())
         .AddTo(_disposables);
     }
@@ -60,7 +61,7 @@ namespace _00_Scripts.Game.Weapon.Core
       var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
       transform
-        .DORotateQuaternion(Quaternion.Euler(0, 0, angle), 0.05f)
+        .DORotateQuaternion(Quaternion.Euler(0, 0, angle), data.followTime)
         .SetUpdate(true);
 
       bodyRenderer.flipY = Mathf.Abs(angle) > 90f;

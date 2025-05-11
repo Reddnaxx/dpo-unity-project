@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using _00_Scripts.Events;
 using _00_Scripts.Game.Entity;
 using _00_Scripts.Game.Items;
@@ -12,8 +9,11 @@ using UnityEngine;
 
 namespace _00_Scripts.Game.Player
 {
-  public class Player : Character
+  public class PlayerCharacter : Character
   {
+    public static Inventory Inventory { get; private set; }
+    public static IStats Stats { get; private set; }
+
     [SerializeField] private PlayerLevel playerLevel;
 
     private Inventory _inventory;
@@ -23,7 +23,11 @@ namespace _00_Scripts.Game.Player
       base.Awake();
 
       playerLevel = new PlayerLevel();
-      _inventory = new Inventory(defaultStats);
+
+      _inventory = new Inventory();
+      Inventory = _inventory;
+
+      Stats = CurrentStats;
 
       playerLevel.CurrentExperience
         .Subscribe(_ => OnExperienceChanged(
@@ -40,14 +44,21 @@ namespace _00_Scripts.Game.Player
 
       EventBus.On<EnemyDeathEvent>()
         .Subscribe(evt => playerLevel.AddExperience(evt.ExperiencePoints));
+
+      EventBus.On<PlayerEquipItemEvent>()
+        .Subscribe(evt =>
+        {
+          _inventory.AddItem(evt.NewItem);
+          Stats = CurrentStats = _inventory.GetFinalStats(CurrentStats);
+        });
     }
 
     protected override void Start()
     {
       base.Start();
 
-      playerLevel.AddExperience(0);
-      TakeDamage(0);
+      playerLevel.AddExperience(1);
+      TakeDamage(10);
     }
 
     public override void TakeDamage(float damage)

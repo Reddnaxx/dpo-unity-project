@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 using _00_Scripts.Game.Items;
 
@@ -21,7 +22,7 @@ namespace _00_Scripts.Game.Rewards
       {
         throw new ArgumentNullException(nameof(item));
       }
-      
+
       if (onClick != null)
       {
         var button = GetComponent<Button>();
@@ -33,7 +34,20 @@ namespace _00_Scripts.Game.Rewards
       icon.preserveAspect = true;
       icon.sprite = item.icon;
       nameText.text = item.itemName;
-      descriptionText.text = item.description;
+
+      descriptionText.text = GetDescription(item);
+    }
+
+    private string GetDescription(Item item)
+    {
+      var result = new StringBuilder();
+
+      foreach (var upgrade in item.upgrades)
+      {
+        result.AppendLine(UpgradeTitleMap.GetDescription(upgrade.type, upgrade.value));
+      }
+
+      return result.ToString();
     }
   }
 }

@@ -30,6 +30,7 @@ namespace _00_Scripts.Game.Weapon.Core
     protected AudioSource AudioSource;
 
     protected static IStats PlayerStats => PlayerCharacter.Stats;
+    protected float TotalDamage => PlayerStats.Attack * data.damage;
 
     protected virtual void Awake()
     {
@@ -79,7 +80,10 @@ namespace _00_Scripts.Game.Weapon.Core
     /// </summary>
     protected virtual void DoFire()
     {
-      var projectiles = data.fireStrategy.Fire(firePoint.position, firePoint.rotation, data);
+      var finalData = data.Clone() as WeaponData;
+      finalData.damage = TotalDamage;
+
+      var projectiles = data.fireStrategy.Fire(firePoint.position, firePoint.rotation, finalData);
 
       foreach (var projectile in projectiles)
       {

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d6f6c371db641c9a4cafecd263e8762, type: 3}
-  m_Name: Test Item 1
+  m_Name: Glass Cannon
   m_EditorClassIdentifier: 
-  itemName: "Trallallero Trallall\xE0"
-  icon: {fileID: -7672087129735864097, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
+  itemName: "\u0421\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u0430\u044F \u043F\u0443\u0448\u043A\u0430"
+  icon: {fileID: 8812079278837170296, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
   upgrades:
   - category: 0
-    statType: 0
+    statType: 1
     weaponType: 0
-    value: 1.15
-  - category: 1
-    statType: 0
+    value: 0.75
+  - category: 0
+    statType: 3
     weaponType: 0
-    value: -5
+    value: 1.5

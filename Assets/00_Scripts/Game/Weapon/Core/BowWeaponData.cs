@@ -1,9 +1,11 @@
+using System;
+
 using UnityEngine;
 
 namespace _00_Scripts.Game.Weapon.Core
 {
   [CreateAssetMenu(menuName = "Game/Weapon/BowWeaponData")]
-  public class BowWeaponData : WeaponData
+  public class BowWeaponData : WeaponData, ICloneable
   {
     [Header("Main")] public float maxChargeTime = 2f;
     public float chargeRatioThreshold = 0.1f;
@@ -14,5 +16,7 @@ namespace _00_Scripts.Game.Weapon.Core
 
     public AnimationCurve velocityMultiplierCurve =
       AnimationCurve.EaseInOut(0, 0, 1, 2);
+
+    public object Clone() => MemberwiseClone();
   }
 }

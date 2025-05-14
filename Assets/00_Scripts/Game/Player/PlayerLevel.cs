@@ -29,7 +29,7 @@ namespace _00_Scripts.Game.Player
         CurrentExperience.Value += experience;
 
         if (CurrentExperience.Value < ExperienceToNextLevel) return;
-        
+
         ExperienceToNextLevel = Mathf.RoundToInt(ExperienceToNextLevel * ExperienceToNextLevelModifier);
 
         Level.Value++;

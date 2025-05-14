@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+
+using _00_Scripts.Game.Player;
+using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Helpers;
 using _00_Scripts.UI;
 
@@ -18,6 +22,8 @@ namespace _00_Scripts.Scenes
     private bool IsMenuOpen => _currentMenuGameObject != null;
     private GameObject _currentMenuGameObject;
 
+    [SerializeField] private List<Weapon> weaponPrefabs;
+
     public override void Init()
     {
       base.Init();
@@ -29,6 +35,8 @@ namespace _00_Scripts.Scenes
         .OnPerformedAsObservable()
         .Subscribe(_ => ShowMenu())
         .AddTo(this);
+
+      FindFirstObjectByType<PlayerCharacter>().Init(weaponPrefabs[0]);
     }
 
     private void ShowMenu()

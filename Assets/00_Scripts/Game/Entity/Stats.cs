@@ -193,8 +193,8 @@ namespace _00_Scripts.Game.Entity
         a.FireResistance - b.FireResistance,
         a.IceResistance - b.IceResistance,
         a.PoisonResistance - b.PoisonResistance,
-        a.HasHoming,
-        a.HasBounce
+        a.HasHoming || b.HasHoming,
+        a.HasBounce || b.HasBounce
       );
     }
   }

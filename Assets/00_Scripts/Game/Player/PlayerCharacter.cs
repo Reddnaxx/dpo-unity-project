@@ -15,8 +15,15 @@ namespace _00_Scripts.Game.Player
     public static IStats Stats { get; private set; }
 
     [SerializeField] private PlayerLevel playerLevel;
+    [SerializeField] private Transform weaponPivot;
 
     private Inventory _inventory;
+    private Weapon.Core.Weapon _currentWeapon;
+
+    public void Init(Weapon.Core.Weapon weapon)
+    {
+      _currentWeapon = Instantiate(weapon, weaponPivot);
+    }
 
     protected override void Awake()
     {

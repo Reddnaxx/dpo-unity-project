@@ -10,19 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d6f6c371db641c9a4cafecd263e8762, type: 3}
-  m_Name: Test Item 2
+  m_Name: Rubber Shell
   m_EditorClassIdentifier: 
-  itemName: Tung Tung Tung Sahur
+  itemName: "\u0420\u0435\u0437\u0438\u043D\u043E\u0432\u0430\u044F \u043E\u0431\u043E\u043B\u043E\u0447\u043A\u0430"
   icon: {fileID: 4039527258408786561, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
   upgrades:
   - category: 0
-    statType: 4
+    statType: 3
     weaponType: 0
-    value: 1.1
-  - category: 0
-    statType: 1
-    weaponType: 0
-    value: 0.95
+    value: 0.5
   - category: 1
     statType: 1
     weaponType: 1

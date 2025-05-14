@@ -10,6 +10,8 @@ using DG.Tweening;
 
 using UniRx;
 
+using Unity.VisualScripting;
+
 using UnityEngine;
 
 namespace _00_Scripts.Game.Weapon.Implementations
@@ -131,7 +133,10 @@ namespace _00_Scripts.Game.Weapon.Implementations
       var velocityMultiplier = BowData.velocityMultiplierCurve.Evaluate(ratio);
       var damageMultiplier = BowData.damageMultiplierCurve.Evaluate(ratio);
 
-      var projectiles = BowData.fireStrategy.Fire(firePoint.position, transform.rotation, BowData, velocityMultiplier,
+      var finalData = BowData.Clone() as BowWeaponData;
+      finalData.damage = TotalDamage;
+
+      var projectiles = BowData.fireStrategy.Fire(firePoint.position, transform.rotation, finalData, velocityMultiplier,
         damageMultiplier);
 
       foreach (var projectile in projectiles)

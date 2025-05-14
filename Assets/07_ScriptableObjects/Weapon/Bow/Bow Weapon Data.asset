@@ -18,7 +18,7 @@ MonoBehaviour:
   followTime: 0.2
   projectilePrefab: {fileID: -7433762558808552424, guid: 05fe027185b22344dbbde103a70f4d91, type: 3}
   projectileSpeed: 8
-  damage: 18
+  damage: 12
   maxChargeTime: 0.75
   chargeRatioThreshold: 0.6
   releaseTime: 0.1

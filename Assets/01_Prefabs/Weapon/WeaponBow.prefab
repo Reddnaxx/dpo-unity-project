@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 4788c1ab90f50444e8e63fa817456365, type: 2}
   firePoint: {fileID: 7677416142708544368}
-  shootSound: {fileID: 0}
+  shootSound: {fileID: 8300000, guid: a35bcc7ec9748134f801df7ae8caa32f, type: 3}
   bodyRenderer: {fileID: 6515126914189056733}
   arrowBody: {fileID: 3024905200574091745}
   arrowChargeOffset: 0.18
@@ -178,6 +178,9 @@ MonoBehaviour:
   - {fileID: 4948774720719412629, guid: cd460c4f71ced8d4eacdb556d0e6ace5, type: 3}
   - {fileID: 3298862418328315149, guid: cd460c4f71ced8d4eacdb556d0e6ace5, type: 3}
   - {fileID: 3216016198144983771, guid: cd460c4f71ced8d4eacdb556d0e6ace5, type: 3}
+  bowDrawSound: {fileID: 8300000, guid: bf9db6e4f3cf13b438a987b6a2325b03, type: 3}
+  bowShootSound: {fileID: 8300000, guid: afae044cb19517440a9a2aa1f9669ded, type: 3}
+  audioSource: {fileID: 4767962066031302621}
 --- !u!82 &4767962066031302621
 AudioSource:
   m_ObjectHideFlags: 0

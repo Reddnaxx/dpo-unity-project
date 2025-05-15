@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 62a0ebfe4f065eb4ca0f55e0dc8edef0, type: 2}
   firePoint: {fileID: 3696077390312491851}
-  shootSound: {fileID: 0}
+  shootSound: {fileID: 8300000, guid: a9822e72cc7f00049b26d82aa932876c, type: 3}
   bodyRenderer: {fileID: 7557037186419905898}
 --- !u!82 &1508249520373090864
 AudioSource:

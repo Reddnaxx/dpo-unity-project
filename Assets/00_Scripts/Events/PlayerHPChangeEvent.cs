@@ -1,6 +1,6 @@
 namespace _00_Scripts.Events
 {
-  public class PlayerHPChangeEvent
+  public class PlayerHpChangeEvent
   {
     public float CurrentHealth
     {
@@ -12,7 +12,7 @@ namespace _00_Scripts.Events
       get;
     }
 
-    public PlayerHPChangeEvent(float currentHealth, float maxHealth)
+    public PlayerHpChangeEvent(float currentHealth, float maxHealth)
     {
       CurrentHealth = currentHealth;
       MaxHealth = maxHealth;

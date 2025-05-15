@@ -64,5 +64,19 @@ namespace _00_Scripts.Game.Entity
       get;
       private set;
     }
+
+    [field: SerializeField]
+    public bool HasHoming
+    {
+      get;
+      private set;
+    }
+
+    [field: SerializeField]
+    public bool HasBounce
+    {
+      get;
+      private set;
+    }
   }
 }

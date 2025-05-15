@@ -11,5 +11,8 @@ namespace _00_Scripts.Game.Entity
     public float FireResistance { get; }
     public float IceResistance { get; }
     public float PoisonResistance { get; }
+    
+    public bool HasHoming { get; }
+    public bool HasBounce { get; }
   }
 }

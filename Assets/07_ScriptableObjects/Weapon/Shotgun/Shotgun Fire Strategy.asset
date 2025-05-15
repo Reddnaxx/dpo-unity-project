@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Shotgun Fire Strategy
   m_EditorClassIdentifier: 
   pelletCount: 5
-  spreadAngle: 15
+  spreadAngle: 12

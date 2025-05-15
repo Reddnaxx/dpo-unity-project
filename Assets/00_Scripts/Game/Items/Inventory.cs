@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+
 using _00_Scripts.Game.Entity;
+
 using UniRx;
 
 namespace _00_Scripts.Game.Items
@@ -8,15 +10,8 @@ namespace _00_Scripts.Game.Items
   [Serializable]
   public class Inventory
   {
-    private readonly IStats _defaultStats;
-
     public IReadOnlyReactiveCollection<Item> Items => _items;
     private readonly ReactiveCollection<Item> _items = new();
-
-    public Inventory(IStats defaultStats)
-    {
-      _defaultStats = defaultStats;
-    }
 
     public void AddItem(Item item)
     {
@@ -28,9 +23,9 @@ namespace _00_Scripts.Game.Items
       _items.Remove(item);
     }
 
-    public Stats GetFinalStats()
+    public Stats GetFinalStats(IStats currentStats)
     {
-      var finalStats = new Stats(_defaultStats);
+      var finalStats = new Stats(currentStats);
 
       foreach (var item in _items) finalStats.ApplyItem(item);
 

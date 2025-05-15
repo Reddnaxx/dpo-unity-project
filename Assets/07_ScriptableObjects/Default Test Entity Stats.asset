@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Health>k__BackingField: 100
   <MaxHealth>k__BackingField: 100
-  <Attack>k__BackingField: 5
+  <Attack>k__BackingField: 1
   <Speed>k__BackingField: 1
   <PhysicalResistance>k__BackingField: 0.05
   <FireResistance>k__BackingField: 0
   <IceResistance>k__BackingField: 0
   <PoisonResistance>k__BackingField: 0.025
+  <HasHoming>k__BackingField: 0
+  <HasBounce>k__BackingField: 0

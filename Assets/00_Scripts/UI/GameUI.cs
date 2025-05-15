@@ -1,4 +1,6 @@
 using _00_Scripts.Events;
+using _00_Scripts.Game.Items;
+using _00_Scripts.Game.Player;
 using _00_Scripts.Helpers;
 
 using TMPro;
@@ -10,7 +12,7 @@ using UnityEngine.UI;
 
 namespace _00_Scripts.UI
 {
-  public class GameUI : MonoBehaviour
+  public class GameUI : UIFadeScreen
   {
     [SerializeField] private TMP_Text levelText;
 
@@ -20,19 +22,19 @@ namespace _00_Scripts.UI
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private Image healthBar;
 
-    private void Awake()
+    protected override void Awake()
     {
+      base.Awake();
+
       EventBus.On<PlayerExpChangeEvent>()
         .Subscribe(evt => UpdateExperience(evt.CurrentExperience, evt.ExperienceToNextLevel, evt.CurrentLevel));
 
-      EventBus.On<PlayerHPChangeEvent>()
+      EventBus.On<PlayerHpChangeEvent>()
         .Subscribe(evt => UpdateHealth(evt.CurrentHealth, evt.MaxHealth));
     }
 
     private void UpdateHealth(float health, float maxHealth)
     {
-      Debug.Log("Health updated: " + health + " / " + maxHealth);
-
       healthText.text = $"HP: {health} / {maxHealth}";
 
       healthBar.fillAmount = health / maxHealth;
@@ -40,9 +42,6 @@ namespace _00_Scripts.UI
 
     private void UpdateExperience(float experience, float experienceToNextLevel, int level)
     {
-      Debug.Log("Experience updated: " + experience + " / " +
-                experienceToNextLevel + " (Level: " + level + ")");
-
       levelText.text = $"Уровень: {level}";
 
       experienceText.text = $"Опыт: {experience} / {experienceToNextLevel}";

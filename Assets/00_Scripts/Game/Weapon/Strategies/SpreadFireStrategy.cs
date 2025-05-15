@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+
 using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Game.Weapon.Projectiles;
+using _00_Scripts.Game.Weapon.Projectiles.Modules;
 
 using UnityEngine;
 
@@ -14,7 +18,8 @@ namespace _00_Scripts.Game.Weapon.Strategies
     [Tooltip("Общий угол разброса в градусах")]
     public float spreadAngle = 30f;
 
-    public override Projectile[] Fire(Vector3 position, Quaternion rotation, WeaponData data, float velocityMultiplier = 1f, float damageMultiplier = 1f)
+    public override Projectile[] Fire(Vector3 position, Quaternion rotation, WeaponData data,
+      float velocityMultiplier = 1f, float damageMultiplier = 1f)
     {
       var pellets = new Projectile[pelletCount];
 
@@ -28,7 +33,11 @@ namespace _00_Scripts.Game.Weapon.Strategies
         // Инстанцируем и инициализируем
         var go = Instantiate(data.projectilePrefab, position, pelletRot).gameObject;
         var proj = go.GetComponent<Projectile>();
-        proj.Init(data.projectileSpeed * velocityMultiplier, data.damage * damageMultiplier);
+
+        proj.Init(
+          data.projectileSpeed * velocityMultiplier,
+          data.damage * damageMultiplier
+        );
 
         pellets[i] = proj;
       }

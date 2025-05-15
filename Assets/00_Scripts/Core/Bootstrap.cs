@@ -1,11 +1,16 @@
 using System;
+
 using _00_Scripts.Constants;
+using _00_Scripts.Events;
 using _00_Scripts.Helpers;
 using _00_Scripts.Scenes;
 using _00_Scripts.UI;
+
 using UniRx;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 using Object = UnityEngine.Object;
 
 namespace _00_Scripts.Core
@@ -14,7 +19,11 @@ namespace _00_Scripts.Core
   {
     private static Bootstrap _instance;
 
-    public UIRoot UIRoot { get; private set; }
+    public UIRoot UIRoot
+    {
+      get;
+      private set;
+    }
 
     private SceneController _sceneController;
 
@@ -44,7 +53,8 @@ namespace _00_Scripts.Core
       if (currentScene != SceneNames.Boot &&
           currentScene != SceneNames.MainMenu)
       {
-        return Observable.ReturnUnit();
+        SceneManager.LoadScene(SceneNames.Boot);
+        return _sceneController.LoadScene(currentScene);
       }
 #endif
 
@@ -53,7 +63,9 @@ namespace _00_Scripts.Core
 
     private void InitBaseEvents()
     {
-      Events.On<string>("loadScene", nameof(LoadScene)).Subscribe(LoadScene);
+      EventBus
+        .On<LoadSceneEvent>()
+        .Subscribe(evt => LoadScene(evt.SceneName));
     }
 
     private void InstantiateBaseObjects()
@@ -68,7 +80,7 @@ namespace _00_Scripts.Core
     private void LoadScene(string sceneName)
     {
       _sceneController.LoadScene(sceneName)
-        .Subscribe(_ => { UIRoot.ClearScreens(); });
+        .Subscribe(_ => UIRoot.ClearScreens());
     }
   }
 }

@@ -146,13 +146,9 @@ namespace _00_Scripts.Game.Entity
       var currentPercent = stats.Health / stats.MaxHealth;
 
       if (multiply)
-      {
         stats.MaxHealth *= value;
-      }
       else
-      {
         stats.MaxHealth += value;
-      }
 
       stats.Health = stats.MaxHealth * currentPercent;
     }

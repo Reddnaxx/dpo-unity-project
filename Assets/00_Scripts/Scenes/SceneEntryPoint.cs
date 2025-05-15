@@ -1,5 +1,7 @@
 using System;
+
 using _00_Scripts.UI;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +16,13 @@ namespace _00_Scripts.Scenes
     protected virtual void Awake()
     {
       UIRoot = FindFirstObjectByType<UIRoot>();
+
+      if (!UIRoot)
+      {
+        var uiRootPrefab = Resources.Load<UIRoot>("UI/UIRoot");
+        UIRoot = Instantiate(uiRootPrefab, Vector3.zero, Quaternion.identity)
+          .GetComponent<UIRoot>();
+      }
     }
 
     public virtual void Init()
@@ -38,10 +47,7 @@ namespace _00_Scripts.Scenes
 
     private void SetScreen()
     {
-      if (!uiScreen)
-      {
-        throw new NullReferenceException("UIScreen is not set");
-      }
+      if (!uiScreen) throw new NullReferenceException("UIScreen is not set");
 
       UIRoot.ClearScreens();
       UIRoot.AddScreen(uiScreen);

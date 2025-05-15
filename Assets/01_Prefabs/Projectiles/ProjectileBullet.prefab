@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2956889488913269849}
   - component: {fileID: 3598644366825716467}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5624085554879913924}
   - component: {fileID: 1486200186190324659}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: -7791990098421557996}
   - component: {fileID: 9197632590166032698}
   - component: {fileID: 3727086930257797264}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ProjectileBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,9 +343,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 3418152458072599661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f75bfa8242f84d2b8c929427695028c7, type: 3}
+  m_Script: {fileID: 11500000, guid: 344853226d72a8b419c63d0b1d3597b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 1
-  velocity: 20
+  lifetime: 5
   destroyOnHit: 1

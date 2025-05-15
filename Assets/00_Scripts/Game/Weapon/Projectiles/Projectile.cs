@@ -1,82 +1,84 @@
 using System;
-using _00_Scripts.Game.Entity;
+
 using UniRx;
+
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _00_Scripts.Game.Weapon.Projectiles
 {
-  public abstract class Projectile : MonoBehaviour
-  {
-    public float Damage => _damageModifier * baseDamage;
-    public float Velocity => _velocityModifier * baseVelocity;
-    
-    [SerializeField] private float baseDamage = 10f;
-    
-    [SerializeField] private float lifetime = 5f;
-    [SerializeField] private float baseVelocity = 10f;
-    [SerializeField] private bool destroyOnHit = true;
-
-    private float _damageModifier = 1f;
-    private float _velocityModifier = 1f;
-
-    public IObservable<Vector2> OnHit => _onHit.AsObservable();
-
-    public IObservable<Vector2> OnLifetimeEnd =>
-      _onLifetimeEnd.First().AsObservable();
-
-    private Subject<Vector2> _onHit;
-    private Subject<Vector2> _onLifetimeEnd;
-
-    private Rigidbody2D _rb;
-
-    private void Awake()
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class Projectile : MonoBehaviour
     {
-      _onHit = new Subject<Vector2>();
-      _onLifetimeEnd = new Subject<Vector2>();
+        // Значения инициализируются через Init()
+        public float Damage { get; private set; }
+        public float Velocity { get; private set; }
 
-      _rb = GetComponent<Rigidbody2D>();
+        // События попадания и окончания жизни
+        private readonly Subject<Vector2> _onHit = new Subject<Vector2>();
+        private readonly Subject<Vector2> _onLifetimeEnd = new Subject<Vector2>();
+
+        public IObservable<Vector2> OnHit => _onHit.AsObservable();
+        public IObservable<Vector2> OnLifetimeEnd => _onLifetimeEnd.First().AsObservable();
+
+        [Header("Настройки")]
+        [SerializeField] private float lifetime = 5f;
+        [SerializeField] private bool destroyOnHit = true;
+
+        private Rigidbody2D _rb;
+
+        private void Awake()
+        {
+            _rb = GetComponent<Rigidbody2D>();
+        }
+
+        private void OnEnable()
+        {
+            // Таймер жизни
+            Observable.Timer(TimeSpan.FromSeconds(lifetime))
+                .Subscribe(_ =>
+                {
+                    _onLifetimeEnd.OnNext(transform.position);
+                    Destroy(gameObject);
+                })
+                .AddTo(this);
+        }
+
+        private void Start()
+        {
+            // Запускаем полёт
+            _rb.linearVelocity = transform.right * Velocity;
+        }
+
+        /// <summary>
+        /// Инициализация снаряда из FireStrategy.
+        /// </summary>
+        /// <param name="velocity">Скорость полёта</param>
+        /// <param name="damage">Урон при попадании</param>
+        /// <param name="lifetimeOverride">Опционально задать время жизни</param>
+        public virtual void Init(float velocity, float damage, float lifetimeOverride = -1f)
+        {
+            Velocity = velocity;
+            Damage = damage;
+            if (lifetimeOverride > 0f)
+                lifetime = lifetimeOverride;
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            // Шлём позицию удара
+            var contactPoint = collision.contacts[0].point;
+            _onHit.OnNext(contactPoint);
+
+            // Если хитнули Character — даём урон
+            if (collision.gameObject.TryGetComponent<MonoBehaviour>(out var mb))
+            {
+                // Предполагаем, что Character реализует метод TakeDamage
+                var character = mb as _00_Scripts.Game.Entity.Character;
+                character?.TakeDamage(Damage);
+            }
+
+            if (destroyOnHit)
+                Destroy(gameObject);
+        }
     }
-
-    private void Start()
-    {
-      StartLifetimeTimer();
-
-      _rb.linearVelocity = transform.right * Velocity;
-    }
-    
-    public void SetDamageModifier(float modifier)
-    {
-      _damageModifier = modifier;
-    }
-
-    public void SetVelocityModifier(float modifier)
-    {
-      _velocityModifier = modifier;
-    }
-
-    private void StartLifetimeTimer() => Observable
-      .Timer(TimeSpan.FromSeconds(lifetime))
-      .Subscribe(_ =>
-      {
-        _onLifetimeEnd.OnNext(transform.position);
-        Destroy(gameObject);
-      })
-      .AddTo(this);
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-      _onHit.OnNext(collision.contacts[0].point);
-      
-      if (collision.gameObject.TryGetComponent<Character>(out var character))
-      {
-        character.TakeDamage(Damage);
-      }
-
-      if (destroyOnHit)
-      {
-        Destroy(gameObject);
-      }
-    }
-  }
 }

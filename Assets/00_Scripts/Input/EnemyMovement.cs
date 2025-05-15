@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets._00_Scripts.Input
+namespace _00_Scripts.Input
 {
-    public class EnemyFollow : MonoBehaviour
+  public class EnemyFollow : MonoBehaviour
+  {
+    [SerializeField] public Transform player;
+    [SerializeField] public float speed = 2f;
+
+    private void Update()
     {
-        [SerializeField] public Transform player; 
-        [SerializeField] public float speed = 2f;
+      if (player == null) return;
 
-        private void Update()
-        {
-            if (player == null) return;
+      var direction = (player.position - transform.position).normalized;
 
-            Vector3 direction = (player.position - transform.position).normalized;
-
-            transform.position += direction * speed * Time.deltaTime;
-        }
+      transform.position += direction * speed * Time.deltaTime;
     }
+  }
 }

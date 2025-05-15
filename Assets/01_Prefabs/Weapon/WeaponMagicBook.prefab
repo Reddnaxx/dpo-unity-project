@@ -45,14 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 201699b529122a5479cd15969862f978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: -7791990098421557996, guid: 49afca56e509c38428c4c79fe17dcb4f, type: 3}
+  data: {fileID: 11400000, guid: 7e6a7b9921d21cc4ebe290bf2a49ba9a, type: 2}
   firePoint: {fileID: 259734243357666539}
-  fireRate: 0.5
-  orderChangeAngle: 45
-  body: {fileID: 6927802390753461981}
+  shootSound: {fileID: 0}
+  bodyRenderer: {fileID: 6927802390753461981}
   attackRadius: 5
   orbitDistance: 0.8
   orbitSpeed: 80
+  followSpeed: 5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64

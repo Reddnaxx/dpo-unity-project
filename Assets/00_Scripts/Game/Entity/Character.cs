@@ -1,7 +1,11 @@
 using System;
+
 using DG.Tweening;
+
 using JetBrains.Annotations;
+
 using UniRx;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +15,10 @@ namespace _00_Scripts.Game.Entity
   {
     [SerializeField] protected DefaultStats defaultStats;
     [SerializeField] [CanBeNull] protected Image healthBarFill;
+
+    [Header("Hit Sound")]
+    [SerializeField] private AudioClip hitSound;
+    private AudioSource audioSource;
 
     protected Stats CurrentStats;
 
@@ -29,6 +37,8 @@ namespace _00_Scripts.Game.Entity
       CurrentStats = new Stats(defaultStats);
 
       _healthPercentage = new ReactiveProperty<float>(CurrentHealthPercentage);
+
+      audioSource = GetComponent<AudioSource>();
     }
 
     protected virtual void Start()
@@ -51,7 +61,10 @@ namespace _00_Scripts.Game.Entity
     {
       CurrentStats.TakeDamage(damage);
 
-      _healthPercentage.Value = Mathf.Round(CurrentHealthPercentage * 10) / 10;
+      _healthPercentage.Value = Mathf.Round(CurrentHealthPercentage * 100) / 100;
+
+      if (hitSound != null && audioSource != null)
+        audioSource.PlayOneShot(hitSound);
     }
   }
 }

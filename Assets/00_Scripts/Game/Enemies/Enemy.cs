@@ -1,5 +1,6 @@
 using _00_Scripts.Events;
 using _00_Scripts.Game.Entity;
+using _00_Scripts.Game.Player;
 using _00_Scripts.Helpers;
 
 using UniRx;
@@ -10,9 +11,9 @@ namespace _00_Scripts.Game.Enemies
 {
   public class Enemy : Character
   {
-    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+    private bool _isActive = true;
     private GameObject _player;
-    private bool _isActive = false;
 
     protected override void Start()
     {
@@ -22,7 +23,7 @@ namespace _00_Scripts.Game.Enemies
         .Subscribe(_ => Die())
         .AddTo(this);
 
-      _player = GameObject.FindWithTag("Player");
+      _player = FindFirstObjectByType<PlayerCharacter>().gameObject;
     }
 
     private void Update()
@@ -30,7 +31,9 @@ namespace _00_Scripts.Game.Enemies
       if (!_isActive || !_player) return;
 
       Vector2 direction = (_player.transform.position - transform.position).normalized;
-      transform.position += (Vector3)(direction * (moveSpeed * Time.deltaTime));
+      transform.position += (Vector3)(direction * (CurrentStats.Speed * Time.deltaTime));
+
+      _spriteRenderer.flipX = direction.x < 0;
     }
 
     private void Die()

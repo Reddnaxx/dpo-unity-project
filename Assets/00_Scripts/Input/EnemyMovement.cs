@@ -12,6 +12,8 @@ namespace _00_Scripts.Input
       if (!player) return;
 
       var direction = (player.position - transform.position).normalized;
+            rb.linearVelocity = direction * speed;
+        }
 
       transform.position += direction * (speed * Time.deltaTime);
     }

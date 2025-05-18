@@ -17,13 +17,19 @@ namespace _00_Scripts.Game.Enemies
 
     protected override void Start()
     {
-      base.Start();
+        protected override void Start()
+        {
+            base.Start();
 
-      OnDeath
-        .Subscribe(_ => Die())
-        .AddTo(this);
+            OnDeath
+              .Subscribe(_ => Die())
+              .AddTo(this);
+        }
 
-      _player = FindFirstObjectByType<PlayerCharacter>().gameObject;
+        private void Die()
+        {
+            Debug.Log("Enemy has died");
+        }
     }
 
     private void Update()

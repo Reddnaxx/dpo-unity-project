@@ -47,8 +47,11 @@ TagManager:
   - name: Enemy
     uniqueID: 2075867819
     locked: 0
-  - name: Weapon
+  - name: Player
     uniqueID: 2950793979
+    locked: 0
+  - name: Obstacles
+    uniqueID: 2408700941
     locked: 0
   m_RenderingLayers:
   - Default

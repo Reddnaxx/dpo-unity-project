@@ -48,7 +48,6 @@ namespace _00_Scripts.Scenes
     private void SetScreen()
     {
       if (!uiScreen) throw new NullReferenceException("UIScreen is not set");
-
       UIRoot.ClearScreens();
       UIRoot.AddScreen(uiScreen);
     }

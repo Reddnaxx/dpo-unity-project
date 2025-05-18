@@ -1,6 +1,4 @@
-using _00_Scripts.Constants;
-using _00_Scripts.Events;
-using _00_Scripts.Helpers;
+using UnityEditor;
 
 using UnityEngine;
 
@@ -8,9 +6,21 @@ namespace _00_Scripts.UI
 {
   public class MainMenuUI : MonoBehaviour
   {
-    public void OnPlayClick()
+    [SerializeField] private WeaponSelectUI weaponSelectUI;
+
+    private UIRoot _uiRoot;
+
+    private void Start() => _uiRoot = FindFirstObjectByType<UIRoot>();
+
+    public void OnPlayClick() => _uiRoot.AddScreen(weaponSelectUI.gameObject);
+
+    public void OnExitClick()
     {
-      EventBus.Publish(new LoadSceneEvent(SceneNames.Sandbox));
+#if UNITY_EDITOR
+      EditorApplication.isPlaying = false;
+#else
+      Application.Quit();
+#endif
     }
   }
 }

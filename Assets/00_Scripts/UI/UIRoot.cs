@@ -24,39 +24,28 @@ namespace _00_Scripts.UI
         Destroy(screens.GetChild(i).gameObject);
     }
 
-    public GameObject AddScreen(GameObject newScreen)
-    {
-      return Instantiate(newScreen, screens, false);
-    }
+    public GameObject AddScreen(GameObject newScreen) => Instantiate(newScreen, screens, false);
 
     public void RemoveScreen(GameObject screen)
     {
       if (screen.TryGetComponent<UIFadeScreen>(out var fadeScreen))
-      {
         fadeScreen.Close();
-      }
       else
-      {
         Destroy(screen);
-      }
     }
 
-    public void ShowLoaderSmooth(float time = FadeDuration)
-    {
+    public void ShowLoaderSmooth(float time = FadeDuration) =>
       loadingScreenCanvasGroup.DOFade(1, time).OnStart(() =>
       {
         loadingScreenCanvasGroup.blocksRaycasts = true;
         loadingScreenCanvasGroup.interactable = true;
       });
-    }
 
-    public void HideLoaderSmooth(float time = FadeDuration)
-    {
+    public void HideLoaderSmooth(float time = FadeDuration) =>
       loadingScreenCanvasGroup.DOFade(0, time).OnComplete(() =>
       {
         loadingScreenCanvasGroup.blocksRaycasts = false;
         loadingScreenCanvasGroup.interactable = false;
       });
-    }
   }
 }

@@ -1,3 +1,5 @@
+using _00_Scripts.Game.Player;
+
 using UnityEngine;
 
 namespace _00_Scripts.Input
@@ -6,6 +8,8 @@ namespace _00_Scripts.Input
   {
     [SerializeField] public Transform player;
     [SerializeField] public float speed = 2f;
+
+    private void Start() => player = FindFirstObjectByType<PlayerCharacter>().transform;
 
     private void Update()
     {

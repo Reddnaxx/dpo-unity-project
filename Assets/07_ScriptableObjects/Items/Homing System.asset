@@ -18,7 +18,7 @@ MonoBehaviour:
   - category: 0
     statType: 3
     weaponType: 0
-    value: 0.7
+    value: 0.9
   - category: 1
     statType: 0
     weaponType: 0

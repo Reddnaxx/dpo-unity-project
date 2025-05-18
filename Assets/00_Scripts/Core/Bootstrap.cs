@@ -2,6 +2,7 @@ using System;
 
 using _00_Scripts.Constants;
 using _00_Scripts.Events;
+using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Helpers;
 using _00_Scripts.Scenes;
 using _00_Scripts.UI;
@@ -19,13 +20,15 @@ namespace _00_Scripts.Core
   {
     private static Bootstrap _instance;
 
+    private SceneController _sceneController;
+
+    private WeaponType _selectedWeaponType;
+
     public UIRoot UIRoot
     {
       get;
       private set;
     }
-
-    private SceneController _sceneController;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void OnBeforeSceneLoad()
@@ -66,6 +69,8 @@ namespace _00_Scripts.Core
       EventBus
         .On<LoadSceneEvent>()
         .Subscribe(evt => LoadScene(evt.SceneName));
+
+      EventBus.On<PlayerSelectWeaponEvent>().Subscribe(evt => _selectedWeaponType = evt.SelectedWeapon);
     }
 
     private void InstantiateBaseObjects()
@@ -79,8 +84,10 @@ namespace _00_Scripts.Core
 
     private void LoadScene(string sceneName)
     {
+      _sceneController.SetPlayerWeapon(_selectedWeaponType);
+
       _sceneController.LoadScene(sceneName)
-        .Subscribe(_ => UIRoot.ClearScreens());
+        .Subscribe();
     }
   }
 }

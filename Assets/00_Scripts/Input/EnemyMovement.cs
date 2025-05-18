@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace _00_Scripts.Input
 {
@@ -12,8 +12,6 @@ namespace _00_Scripts.Input
       if (!player) return;
 
       var direction = (player.position - transform.position).normalized;
-            rb.linearVelocity = direction * speed;
-        }
 
       transform.position += direction * (speed * Time.deltaTime);
     }

@@ -17,21 +17,12 @@ namespace _00_Scripts.Game.Enemies
 
     protected override void Start()
     {
-        protected override void Start()
-        {
             base.Start();
 
             OnDeath
               .Subscribe(_ => Die())
               .AddTo(this);
-        }
-
-        private void Die()
-        {
-            Debug.Log("Enemy has died");
-        }
     }
-
     private void Update()
     {
       if (!_isActive || !_player) return;

@@ -1,4 +1,5 @@
 using DG.Tweening;
+
 using UnityEngine;
 
 namespace _00_Scripts.UI
@@ -20,14 +21,24 @@ namespace _00_Scripts.UI
     public void ClearScreens()
     {
       for (var i = 0; i < screens.childCount; i++)
-      {
         Destroy(screens.GetChild(i).gameObject);
-      }
     }
 
-    public void AddScreen(GameObject newScreen)
+    public GameObject AddScreen(GameObject newScreen)
     {
-      Instantiate(newScreen, screens, false);
+      return Instantiate(newScreen, screens, false);
+    }
+
+    public void RemoveScreen(GameObject screen)
+    {
+      if (screen.TryGetComponent<UIFadeScreen>(out var fadeScreen))
+      {
+        fadeScreen.Close();
+      }
+      else
+      {
+        Destroy(screen);
+      }
     }
 
     public void ShowLoaderSmooth(float time = FadeDuration)

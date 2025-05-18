@@ -1,26 +1,21 @@
 ﻿using UnityEngine;
 
-namespace Assets._00_Scripts.Input
+namespace _00_Scripts.Input
 {
-    public class EnemyFollow : MonoBehaviour
+  public class EnemyFollow : MonoBehaviour
+  {
+    [SerializeField] public Transform player;
+    [SerializeField] public float speed = 2f;
+
+    private void Update()
     {
-        [SerializeField] public Transform player;
-        [SerializeField] public float speed = 2f;
+      if (!player) return;
 
-        private Rigidbody2D rb;
-
-        private void Start()
-        {
-            rb = GetComponent<Rigidbody2D>();
-        }
-
-        private void Update()
-        {
-            if (player == null) return;
-
-            Vector3 direction = (player.position - transform.position).normalized;
-
+      var direction = (player.position - transform.position).normalized;
             rb.linearVelocity = direction * speed;
         }
+
+      transform.position += direction * (speed * Time.deltaTime);
     }
+  }
 }

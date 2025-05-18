@@ -1,0 +1,95 @@
+# Корневой .editorconfig для всех C#-файлов
+root = true
+
+[*.cs]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+
+# ========== Скобки ==========
+# Перенос открывающей скобки для типов и методов
+csharp_new_line_before_open_brace = all  # все блоки на новой строке
+# Правила раздельно:
+csharp_new_line_before_open_brace_for_types = true
+csharp_new_line_before_open_brace_for_methods = true
+csharp_new_line_before_open_brace_for_anonymous_methods = true
+csharp_new_line_before_open_brace_for_control_blocks = true
+csharp_new_line_before_open_brace_for_properties = true
+csharp_new_line_before_open_brace_for_accessors = true
+csharp_new_line_before_open_brace_for_anonymous_types = false
+csharp_new_line_before_open_brace_for_object_collection_array_initializers = false
+
+# ========== Пробелы ==========
+# Вокруг операторов
+csharp_space_around_binary_operators = before_and_after
+# После ключевых слов if/for/while и т. д.
+csharp_space_after_keywords_in_control_flow_statements = true
+# Перед точкой с запятой — не ставить
+csharp_space_before_semicolon = false
+# Внутри круглых скобок не ставить лишние пробелы
+csharp_space_inside_parentheses = never
+
+# ========== Однострочные блоки ==========
+# Разрешить или запрещать однострочные тела
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+
+# ========== Область using ==========
+# Отделять внешние using от Unity-специфичных
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# ========== Максимальная длина строки ==========
+max_line_length = 120
+
+# ========== Комментарии ==========
+# Пробел после // или /// 
+csharp_space_before_triple_slash = false
+
+# ========== Прочее ==========
+# Расположение выражений LINQ по цепочке на новой строке
+csharp_style_expression_bodied_methods = when_on_single_line
+
+roslynator_unity_code_analysis.enabled = true
+
+# === Уровни строгости по категориям Roslynator ===
+# Ошибки контрактов и безопасности
+dotnet_analyzer_diagnostic.category-Roslynator.Correctness.severity = error
+
+# Производительность и потенциальные утечки
+dotnet_analyzer_diagnostic.category-Roslynator.Performance.severity = warning
+
+# Стиль кода: предложения и автоматические правки
+dotnet_analyzer_diagnostic.category-Roslynator.Style.severity = suggestion
+
+# Отключаем редкие «шуточные» правила
+dotnet_analyzer_diagnostic.category-Roslynator.Unnecessary.severity = none
+
+# === Тонкая настройка ключевых правил RCS (стайл + чистота) ===
+# Удалять неиспользуемые using
+dotnet_diagnostic.RCS1001.severity = warning
+# Приводить string.Concat в string interpolation
+dotnet_diagnostic.RCS1071.severity = suggestion
+# Выносить magic-числа в константы
+dotnet_diagnostic.RCS1200.severity = error
+
+# === Настройка RCA (безопасность, Null-checks) ===
+dotnet_diagnostic.RCA1001.severity = error  # Проверять null перед вызовом
+dotnet_diagnostic.RCA2003.severity = warning # Использовать TryParse вместо Parse
+
+# === Исключения для Unity-генерируемых файлов ===
+[*/Generated/**.cs]
+dotnet_analyzer_diagnostic.category-Roslynator.severity = none
+
+# === Разные профили для Editor-скриптов ===
+[Editor/**/*.cs]
+# Более мягкие стили, чтобы не мешать быстрому прототипированию
+dotnet_analyzer_diagnostic.category-Roslynator.Style.severity = none
+dotnet_diagnostic.RCS1001.severity = none
+
+# === Отдельный профиль для тестов ===
+[**/Tests/**/*.cs]
+# В тестах разрешаем более вольный стиль, но жёстко безопасность
+dotnet_analyzer_diagnostic.category-Roslynator.Style.severity = none
+dotnet_diagnostic.RCA1001.severity = error

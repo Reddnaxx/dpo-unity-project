@@ -1,82 +1,108 @@
 using System;
+using System.Collections.Generic;
+
 using _00_Scripts.Game.Entity;
+using _00_Scripts.Game.Weapon.Projectiles.Modules;
+
+using JetBrains.Annotations;
+
 using UniRx;
+
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _00_Scripts.Game.Weapon.Projectiles
 {
-  public abstract class Projectile : MonoBehaviour
+  [RequireComponent(typeof(Rigidbody2D))]
+  public class Projectile : MonoBehaviour
   {
-    public float Damage => _damageModifier * baseDamage;
-    public float Velocity => _velocityModifier * baseVelocity;
-    
-    [SerializeField] private float baseDamage = 10f;
-    
-    [SerializeField] private float lifetime = 5f;
-    [SerializeField] private float baseVelocity = 10f;
-    [SerializeField] private bool destroyOnHit = true;
+    [Header("Base Settings")] [SerializeField]
+    private float lifetime = 5f;
 
-    private float _damageModifier = 1f;
-    private float _velocityModifier = 1f;
+    public bool destroyOnHit = true;
 
-    public IObservable<Vector2> OnHit => _onHit.AsObservable();
+    public float Damage { get; private set; }
+    public float Velocity { get; private set; }
 
-    public IObservable<Vector2> OnLifetimeEnd =>
-      _onLifetimeEnd.First().AsObservable();
+    public Rigidbody2D Rb { get; private set; }
 
-    private Subject<Vector2> _onHit;
-    private Subject<Vector2> _onLifetimeEnd;
+    // Потоки событий
+    private readonly Subject<Collider2D> _onHit = new();
+    private readonly Subject<Vector2> _onLifetimeEnd = new();
+    private readonly Subject<Unit> _onUpdate = new();
 
-    private Rigidbody2D _rb;
+    public IObservable<Collider2D> OnHit => _onHit.AsObservable();
+    public IObservable<Vector2> OnLifetimeEnd => _onLifetimeEnd.AsObservable();
+    public IObservable<Unit> OnUpdate => _onUpdate.AsObservable();
 
-    private void Awake()
+    private readonly List<IDisposable> _moduleSubscriptions = new();
+    private readonly List<IProjectileModule> _modules = new();
+
+    protected virtual void Awake()
     {
-      _onHit = new Subject<Vector2>();
-      _onLifetimeEnd = new Subject<Vector2>();
+      Rb = GetComponent<Rigidbody2D>();
+    }
 
-      _rb = GetComponent<Rigidbody2D>();
+    private void OnEnable()
+    {
+      // Таймер жизни
+      Observable.Timer(TimeSpan.FromSeconds(lifetime))
+        .Subscribe(_ =>
+        {
+          _onLifetimeEnd.OnNext(transform.position);
+          Destroy(gameObject);
+        })
+        .AddTo(this);
+
+      // Обновление каждый кадр
+      Observable.EveryUpdate()
+        .Subscribe(_ => _onUpdate.OnNext(Unit.Default))
+        .AddTo(this);
     }
 
     private void Start()
     {
-      StartLifetimeTimer();
-
-      _rb.linearVelocity = transform.right * Velocity;
-    }
-    
-    public void SetDamageModifier(float modifier)
-    {
-      _damageModifier = modifier;
+      Rb.linearVelocity = transform.right * Velocity;
     }
 
-    public void SetVelocityModifier(float modifier)
+    public virtual void Init(float velocity, float damage, float lifetimeOverride = -1f)
     {
-      _velocityModifier = modifier;
+      Velocity = velocity;
+      Damage = damage;
+      if (lifetimeOverride > 0f)
+        lifetime = lifetimeOverride;
     }
 
-    private void StartLifetimeTimer() => Observable
-      .Timer(TimeSpan.FromSeconds(lifetime))
-      .Subscribe(_ =>
-      {
-        _onLifetimeEnd.OnNext(transform.position);
-        Destroy(gameObject);
-      })
-      .AddTo(this);
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    public T AddModule<T>() where T : Component, IProjectileModule
     {
-      _onHit.OnNext(collision.contacts[0].point);
-      
-      if (collision.gameObject.TryGetComponent<Character>(out var character))
-      {
-        character.TakeDamage(Damage);
-      }
+      // Добавляем компонент заданного типа
+      var module = gameObject.AddComponent<T>();
+      _modules.Add(module);
+      module.Initialize(this);
+      return module;
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+      if (other.TryGetComponent<Character>(out var ch))
+        ch.TakeDamage(Damage);
+
+      _onHit.OnNext(other);
 
       if (destroyOnHit)
-      {
         Destroy(gameObject);
-      }
+    }
+
+    private void OnDestroy()
+    {
+      // Чистим подписки и модули
+      foreach (var sub in _moduleSubscriptions) sub.Dispose();
+      foreach (var mod in _modules) mod.Dispose();
+    }
+
+    // Позволяет модулям сохранять свои подписки
+    public void RegisterModuleSubscription(IDisposable disposable)
+    {
+      _moduleSubscriptions.Add(disposable);
     }
   }
 }

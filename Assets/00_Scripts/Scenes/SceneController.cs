@@ -1,17 +1,20 @@
 using System;
 using System.Collections;
+
 using _00_Scripts.Constants;
 using _00_Scripts.UI;
+
 using UniRx;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 using Object = UnityEngine.Object;
 
 namespace _00_Scripts.Scenes
 {
   public class SceneController
   {
-    private readonly CanvasGroup _loadingScreenCanvasGroup;
     private const float SecondsToWait = .5f;
 
     private readonly UIRoot _uiRoot;

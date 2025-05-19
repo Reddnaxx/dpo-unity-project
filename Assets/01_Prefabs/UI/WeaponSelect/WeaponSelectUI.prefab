@@ -236,8 +236,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 450, y: 250}
-  m_Spacing: {x: 10, y: 10}
+  m_CellSize: {x: 445, y: 150}
+  m_Spacing: {x: 10, y: 1}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &760512527950998910
@@ -536,7 +536,7 @@ RectTransform:
   m_GameObject: {fileID: 2208298081017147467}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1630741240323425297}
@@ -817,6 +817,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 868422998263619930, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
+    - target: {fileID: 8975192882362086128, guid: fdb3f72eeb9d00b4ba4922af7c68ff89, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -955,6 +959,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 3843231544584785974, guid: 606e033e78b03624d85ba58e3f7ee22c, type: 3}
+    - target: {fileID: 8975192882362086128, guid: fdb3f72eeb9d00b4ba4922af7c68ff89, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1084,6 +1092,10 @@ PrefabInstance:
     - target: {fileID: 3185213690013318951, guid: fdb3f72eeb9d00b4ba4922af7c68ff89, type: 3}
       propertyPath: m_Name
       value: WeaponSelectItem
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975192882362086128, guid: fdb3f72eeb9d00b4ba4922af7c68ff89, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1223,6 +1235,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 4948774720719412629, guid: cd460c4f71ced8d4eacdb556d0e6ace5, type: 3}
+    - target: {fileID: 8975192882362086128, guid: fdb3f72eeb9d00b4ba4922af7c68ff89, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

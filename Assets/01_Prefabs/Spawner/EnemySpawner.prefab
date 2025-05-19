@@ -44,6 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b4a184d304fe942a8f16564ae2ba2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPool: {fileID: 6187315233346006468, guid: d831bc29a96e5414caed7aafc5f7980d, type: 3}
-  spawnInterval: 5
-  spawnRadius: 5
+  _enemyPool: {fileID: 6187315233346006468, guid: d831bc29a96e5414caed7aafc5f7980d, type: 3}
+  _playerTransform: {fileID: 2586703266553442839, guid: 1918e5b76ca137c4d9430a1d0460c4d1, type: 3}
+  _spawnInterval: 3
+  _maxEnemies: 10
+  _spawnRadius: 5
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemiesPerWave: 2
+  _waveCooldown: 2
+  _spawnCheckRadius: 0.5

@@ -1,50 +1,72 @@
-using System.Collections.Generic;
-
 using UnityEngine;
+using UniRx;
+using System.Collections.Generic;
+using _00_Scripts.Game.Enemies;
 
-namespace _00_Scripts.Game.Enemies
+public class EnemyPool : MonoBehaviour
 {
-  public class EnemyPool : MonoBehaviour
+  [SerializeField] private List<Enemy> _enemyPrefabs; // Теперь список префабов
+  [SerializeField] private int _poolSize = 40;
+
+  private Queue<Enemy> _enemyPool = new Queue<Enemy>();
+  private int _currentPrefabIndex = 0;
+
+  private void Awake()
   {
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private int poolSize = 10;
-    private Queue<GameObject> enemyPool = new Queue<GameObject>();
+    InitializePool();
+  }
 
-    private void Awake()
+  private void InitializePool()
+  {
+    _enemyPool.Clear();
+
+    for (int i = 0; i < _poolSize; i++)
     {
-      InitializePool();
+      Enemy enemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+      enemy.gameObject.SetActive(false);
+
+      enemy.OnDeath
+          .Subscribe(_ => ReturnEnemy(enemy))
+          .AddTo(enemy);
+
+      _enemyPool.Enqueue(enemy);
+    }
+  }
+
+  public void ChangeEnemyType(int waveNumber)
+  {
+    // Выбираем префаб на основе номера волны (можно изменить логику выбора)
+    _currentPrefabIndex = waveNumber % _enemyPrefabs.Count;
+    InitializePool(); // Переинициализируем пул с новым типом врагов
+  }
+
+  public Enemy GetEnemy(Vector2 position, Transform target)
+  {
+    if (_enemyPool.Count == 0)
+    {
+      Enemy newEnemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+      newEnemy.OnDeath
+          .Subscribe(_ => ReturnEnemy(newEnemy))
+          .AddTo(newEnemy);
+
+      InitializeEnemy(newEnemy, position, target);
+      return newEnemy;
     }
 
-    private void InitializePool()
-    {
-      for (int i = 0; i < poolSize; i++)
-      {
-        GameObject enemy = Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity);
-        enemy.SetActive(false);
-        enemy.transform.SetParent(transform);
-        enemyPool.Enqueue(enemy);
-      }
-    }
+    Enemy enemy = _enemyPool.Dequeue();
+    InitializeEnemy(enemy, position, target);
+    return enemy;
+  }
 
-    public GameObject GetEnemy()
-    {
-      if (enemyPool.Count > 0)
-      {
-        GameObject enemy = enemyPool.Dequeue();
-        return enemy;
-      }
-      else
-      {
-        GameObject enemy = Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity);
-        return enemy;
-      }
-    }
+  public void ReturnEnemy(Enemy enemy)
+  {
+    enemy.gameObject.SetActive(false);
+    _enemyPool.Enqueue(enemy);
+  }
 
-    public void ReturnEnemy(GameObject enemy)
-    {
-      enemy.SetActive(false);
-      enemy.transform.SetParent(transform);
-      enemyPool.Enqueue(enemy);
-    }
+  private void InitializeEnemy(Enemy enemy, Vector2 position, Transform target)
+  {
+    enemy.transform.position = position;
+    enemy.gameObject.SetActive(true);
   }
 }

@@ -5,5 +5,6 @@ namespace _00_Scripts.Constants
     public const string Boot = "Boot";
     public const string MainMenu = "MainMenu";
     public const string Sandbox = "Sandbox";
+    public const string Map = "Map";
   }
 }

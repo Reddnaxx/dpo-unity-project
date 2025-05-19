@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultStats: {fileID: 11400000, guid: b46358f673d7d624cb052a1eee425b38, type: 2}
-  healthBarFill: {fileID: 0}
+  healthBarFill: {fileID: 1292833439}
   hitSound: {fileID: 0}
   playerLevel:
     <ExperienceToNextLevelModifier>k__BackingField: 1.5
@@ -3005,6 +3005,17 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1292833439 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7969696143520346155, guid: 5b2f17d328c863041a38a3909ad4a833, type: 3}
+  m_PrefabInstance: {fileID: 891321182}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1727018211
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3013,6 +3024,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4036503162917177145, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
+      propertyPath: m_Name
+      value: WeaponBow
+      objectReference: {fileID: 0}
+    - target: {fileID: 4767962066031302621, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
+      propertyPath: m_Volume
+      value: 0.297
+      objectReference: {fileID: 0}
+    - target: {fileID: 5315251389100938356, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5315251389100938356, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
+      propertyPath: bowDrawSound
+      value: 
+      objectReference: {fileID: 8300000, guid: bf9db6e4f3cf13b438a987b6a2325b03, type: 3}
+    - target: {fileID: 5315251389100938356, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
+      propertyPath: bowShootSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 015198434cfef7a418abf92032b064a9, type: 3}
     - target: {fileID: 1896845985133356560, guid: 5b2f17d328c863041a38a3909ad4a833, type: 3}
       propertyPath: m_Camera
       value: 
@@ -3061,26 +3092,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4036503162917177145, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
-      propertyPath: m_Name
-      value: WeaponBow
-      objectReference: {fileID: 0}
-    - target: {fileID: 4767962066031302621, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
-      propertyPath: m_Volume
-      value: 0.297
-      objectReference: {fileID: 0}
-    - target: {fileID: 5315251389100938356, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
-      propertyPath: audioSource
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5315251389100938356, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
-      propertyPath: bowDrawSound
-      value: 
-      objectReference: {fileID: 8300000, guid: bf9db6e4f3cf13b438a987b6a2325b03, type: 3}
-    - target: {fileID: 5315251389100938356, guid: da0bb0b8f7be7804aa179f8b5f1756b0, type: 3}
-      propertyPath: bowShootSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 015198434cfef7a418abf92032b064a9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

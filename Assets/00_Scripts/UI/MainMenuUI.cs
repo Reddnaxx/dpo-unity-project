@@ -10,7 +10,7 @@ namespace _00_Scripts.UI
   {
     public void OnPlayClick()
     {
-      EventBus.Publish(new LoadSceneEvent(SceneNames.Sandbox));
+      EventBus.Publish(new LoadSceneEvent(SceneNames.Map));
     }
   }
 }

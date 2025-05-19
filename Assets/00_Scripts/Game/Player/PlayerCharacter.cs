@@ -67,7 +67,7 @@ namespace _00_Scripts.Game.Player
       base.Start();
 
       playerLevel.AddExperience(1);
-      TakeDamage(10);
+      TakeDamage(0);
     }
 
     public override void TakeDamage(float damage)

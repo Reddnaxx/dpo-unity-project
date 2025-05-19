@@ -1,3 +1,5 @@
+using System;
+
 using _00_Scripts.Events;
 using _00_Scripts.Game.Entity;
 using _00_Scripts.Game.Items;
@@ -59,8 +61,6 @@ namespace _00_Scripts.Game.Player
           _inventory.AddItem(evt.NewItem);
           Stats = CurrentStats = _inventory.GetFinalStats(defaultStats);
           Health.Value = CurrentHealthPercentage * CurrentStats.MaxHealth;
-
-          Debug.Log($"{CurrentHealthPercentage} {Health} {CurrentStats.MaxHealth}");
 
           EventBus.Publish(new PlayerHpChangeEvent(Health.Value, CurrentStats.MaxHealth));
         });

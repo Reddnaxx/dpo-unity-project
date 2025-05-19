@@ -27,10 +27,12 @@ namespace _00_Scripts.UI
       base.Awake();
 
       EventBus.On<PlayerExpChangeEvent>()
-        .Subscribe(evt => UpdateExperience(evt.CurrentExperience, evt.ExperienceToNextLevel, evt.CurrentLevel));
+        .Subscribe(evt => UpdateExperience(evt.CurrentExperience, evt.ExperienceToNextLevel, evt.CurrentLevel))
+        .AddTo(this);
 
       EventBus.On<PlayerHpChangeEvent>()
-        .Subscribe(evt => UpdateHealth(evt.CurrentHealth, evt.MaxHealth));
+        .Subscribe(evt => UpdateHealth(evt.CurrentHealth, evt.MaxHealth))
+        .AddTo(this);
     }
 
     private void UpdateHealth(float health, float maxHealth)

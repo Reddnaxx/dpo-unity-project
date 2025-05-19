@@ -151,8 +151,9 @@ MonoBehaviour:
   defaultStats: {fileID: 11400000, guid: b46358f673d7d624cb052a1eee425b38, type: 2}
   healthBarFill: {fileID: 7969696143520346155}
   hitSound: {fileID: 8300000, guid: 0f91226d4b5c83e4a81a7a59172e23b9, type: 3}
-  _spriteRenderer: {fileID: 4970857087082202231}
-  _moveSpeed: 1
+  spriteRenderer: {fileID: 4970857087082202231}
+  moveSpeed: 3
+  experienceGain: 100
 --- !u!82 &1957890846456022097
 AudioSource:
   m_ObjectHideFlags: 0

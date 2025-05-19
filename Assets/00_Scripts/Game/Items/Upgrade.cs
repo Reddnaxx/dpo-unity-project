@@ -16,6 +16,8 @@ namespace _00_Scripts.Game.Items
     AttackMultiplier,
     Speed,
     SpeedMultiplier,
+    AttackSpeed,
+    AttackSpeedMultiplier,
     PhysicalResistance,
     FireResistance,
     IceResistance,

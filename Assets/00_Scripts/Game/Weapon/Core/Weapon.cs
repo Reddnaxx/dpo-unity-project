@@ -5,109 +5,109 @@ using _00_Scripts.Game.Player;
 using _00_Scripts.Game.Weapon.Projectiles.Modules;
 using _00_Scripts.Helpers;
 
-using DG.Tweening;
-
 using UniRx;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 namespace _00_Scripts.Game.Weapon.Core
 {
-  [RequireComponent(typeof(AudioSource))]
-  public abstract class Weapon : MonoBehaviour
-  {
-    [SerializeField] protected WeaponData data;
-
-    [Header("References")] [SerializeField]
-    protected Transform firePoint;
-
-    [SerializeField] protected AudioClip shootSound;
-    [SerializeField] protected SpriteRenderer bodyRenderer;
-
-    protected InputAction AttackAction;
-    private CompositeDisposable _disposables;
-    protected AudioSource AudioSource;
-
-    protected static IStats PlayerStats => PlayerCharacter.Stats;
-    protected float TotalDamage => PlayerStats.Attack * data.damage;
-
-    protected virtual void Awake()
+    [RequireComponent(typeof(AudioSource))]
+    public abstract class Weapon : MonoBehaviour
     {
-      AudioSource = GetComponent<AudioSource>();
-      _disposables = new CompositeDisposable();
+        [SerializeField] protected WeaponData data;
+        [SerializeField] protected Transform firePoint;
+        [SerializeField] protected AudioClip shootSound;
+        [SerializeField] protected SpriteRenderer bodyRenderer;
 
-      var pi = FindFirstObjectByType<PlayerInput>();
-      AttackAction = pi.actions["Attack"];
-    }
+        protected InputAction AttackAction;
+        private CompositeDisposable _disposables;
+        private SerialDisposable _attackDisposable; // для динамической подписки на огонь
 
-    protected virtual void OnEnable()
-    {
-      AttackAction
-        .OnPerformedAsObservable()
-        .ThrottleFirst(TimeSpan.FromSeconds(data.fireRate))
-        .Subscribe(_ => DoFire())
-        .AddTo(_disposables);
+        protected static IStats PlayerStats => PlayerCharacter.Stats;
+        protected float TotalDamage => PlayerStats.Attack * data.damage;
 
-      Observable.EveryUpdate()
-        .Where(_ => Time.timeScale > 0)
-        .Subscribe(_ => UpdateAim())
-        .AddTo(_disposables);
-    }
+        // Пересчитываемая скорострельность
+        protected float TotalFireRate => data.fireRate / PlayerStats.AttackSpeed;
 
-    protected virtual void OnDisable()
-    {
-      _disposables.Clear();
-    }
-
-    private void UpdateAim()
-    {
-      Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-      var dir = mouseWorld - (Vector2)transform.position;
-      var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-      transform
-        .DORotateQuaternion(Quaternion.Euler(0, 0, angle), data.followTime)
-        .SetUpdate(true);
-
-      bodyRenderer.flipY = Mathf.Abs(angle) > 90f;
-      var inFront = angle > 90 - data.orderChangeAngle && angle < 90 + data.orderChangeAngle;
-      bodyRenderer.sortingOrder = inFront ? 0 : 1;
-    }
-
-    /// <summary>
-    /// Стреляет: создаёт снаряд(ы), воспроизводит звук.
-    /// </summary>
-    protected virtual void DoFire()
-    {
-      var finalData = data.Clone() as WeaponData;
-      finalData.damage = TotalDamage;
-
-      var projectiles = data.fireStrategy.Fire(firePoint.position, firePoint.rotation, finalData);
-
-      foreach (var projectile in projectiles)
-      {
-        if (PlayerStats.HasHoming)
+        protected virtual void Awake()
         {
-          projectile.AddModule<HomingModule>();
+            AttackAction = FindFirstObjectByType<PlayerInput>()
+                .actions["Attack"];
+            _disposables = new CompositeDisposable();
+            _attackDisposable = new SerialDisposable().AddTo(_disposables);
         }
 
-        if (PlayerStats.HasBounce)
+        protected virtual void OnEnable()
         {
-          projectile.AddModule<BounceModule>();
-          projectile.destroyOnHit = false;
+          // 1) Слежение за изменением AttackSpeed через EveryUpdate + Select + DistinctUntilChanged
+          Observable.EveryUpdate()
+            .Select(_ => TotalFireRate)           // читаем текущее значение
+            .DistinctUntilChanged()                         // реагируем только на реальное изменение
+            .StartWith(TotalFireRate)             // сразу же запустить подписку по текущему значению
+            .Subscribe(value =>
+            {
+              // 2) Пересоздаем подписку на стрельбу с новым интервалом
+              _attackDisposable.Disposable = AttackAction
+                .OnPerformedAsObservable()
+                .ThrottleFirst(TimeSpan.FromSeconds(value))
+                .Subscribe(_ => DoFire())
+                .AddTo(_disposables);
+            })
+            .AddTo(_disposables);
+
+          // Постоянный апдейт прицела
+          Observable.EveryUpdate()
+            .Where(_ => Time.timeScale > 0)
+            .Subscribe(_ => UpdateAim())
+            .AddTo(_disposables);
         }
-      }
 
-      if (shootSound)
-      {
-        AudioSource.PlayOneShot(shootSound);
-      }
-    }
+        protected virtual void OnDisable()
+        {
+            _disposables.Clear();
+        }
 
-    protected virtual void OnDestroy()
-    {
-      _disposables.Dispose();
+        private void UpdateAim()
+        {
+            Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            var dir = mouseWorld - (Vector2)transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            transform
+                .DORotateQuaternion(Quaternion.Euler(0, 0, angle), data.followTime)
+                .SetUpdate(true);
+
+            bodyRenderer.flipY = Mathf.Abs(angle) > 90f;
+            bool inFront = angle > 90 - data.orderChangeAngle && angle < 90 + data.orderChangeAngle;
+            bodyRenderer.sortingOrder = inFront ? 0 : 1;
+        }
+
+        protected virtual void DoFire()
+        {
+            var finalData = data.Clone() as WeaponData;
+            finalData.damage = TotalDamage;
+            var projectiles = data.fireStrategy.Fire(firePoint.position, firePoint.rotation, finalData);
+
+            foreach (var projectile in projectiles)
+            {
+                if (PlayerStats.HasHoming)
+                    projectile.AddModule<HomingModule>();
+
+                if (PlayerStats.HasBounce)
+                {
+                    projectile.AddModule<BounceModule>();
+                    projectile.destroyOnHit = false;
+                }
+            }
+
+            if (shootSound)
+                GetComponent<AudioSource>().PlayOneShot(shootSound);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            _disposables.Dispose();
+        }
     }
-  }
 }

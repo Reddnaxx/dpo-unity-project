@@ -10,13 +10,6 @@ namespace _00_Scripts.Game.Entity
   public class DefaultStats : ScriptableObject, IStats
   {
     [field: SerializeField]
-    public float Health
-    {
-      get;
-      private set;
-    }
-
-    [field: SerializeField]
     public float MaxHealth
     {
       get;
@@ -25,6 +18,13 @@ namespace _00_Scripts.Game.Entity
 
     [field: SerializeField]
     public float Attack
+    {
+      get;
+      private set;
+    }
+
+    [field: SerializeField]
+    public float AttackSpeed
     {
       get;
       private set;

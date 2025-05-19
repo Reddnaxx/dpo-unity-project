@@ -18,6 +18,7 @@ namespace _00_Scripts.Game.Items
     [SerializeField] private TMP_Text statsText;
 
     private static Inventory PlayerInventory => PlayerCharacter.Inventory;
+    private static float PlayerHealth => PlayerCharacter.HealthProperty.Value;
     private static IStats PlayerStats => PlayerCharacter.Stats;
 
     private UIRoot _uiRoot;
@@ -45,8 +46,9 @@ namespace _00_Scripts.Game.Items
     {
       var result = new StringBuilder();
 
-      result.AppendLine($"HP: {PlayerStats.Health:F2} / {PlayerStats.MaxHealth:F2}");
+      result.AppendLine($"HP: {PlayerHealth:F2} / {PlayerStats.MaxHealth:F2}");
       result.AppendLine($"Урон: {PlayerStats.Attack}");
+      result.AppendLine($"Скорострельнсоть: {PlayerStats.AttackSpeed}");
       result.AppendLine($"Скорость: {PlayerStats.Speed}");
       result.AppendLine($"Сопротивление физическому урону: {Mathf.Abs(PlayerStats.PhysicalResistance * 100)}%");
       result.AppendLine($"Сопротивление урону от огня: {Mathf.Abs(PlayerStats.FireResistance * 100)}%");

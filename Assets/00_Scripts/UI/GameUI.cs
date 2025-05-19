@@ -35,7 +35,7 @@ namespace _00_Scripts.UI
 
     private void UpdateHealth(float health, float maxHealth)
     {
-      healthText.text = $"HP: {health} / {maxHealth}";
+      healthText.text = $"HP: {health:F2} / {maxHealth:F2}";
 
       healthBar.fillAmount = health / maxHealth;
     }

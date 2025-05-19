@@ -18,11 +18,12 @@ namespace _00_Scripts.Game.Player
     [SerializeField] private Transform weaponPivot;
 
     private Inventory _inventory;
-    private Weapon.Core.Weapon _currentWeapon;
+    public static ReadOnlyReactiveProperty<float> HealthProperty;
 
     public void Init(Weapon.Core.Weapon weapon)
     {
-      _currentWeapon = Instantiate(weapon, weaponPivot);
+      Instantiate(weapon, weaponPivot);
+      HealthProperty = Health.ToReadOnlyReactiveProperty();
     }
 
     protected override void Awake()
@@ -56,9 +57,12 @@ namespace _00_Scripts.Game.Player
         .Subscribe(evt =>
         {
           _inventory.AddItem(evt.NewItem);
-          Stats = CurrentStats = _inventory.GetFinalStats(CurrentStats);
+          Stats = CurrentStats = _inventory.GetFinalStats(defaultStats);
+          Health.Value = CurrentHealthPercentage * CurrentStats.MaxHealth;
 
-          EventBus.Publish(new PlayerHpChangeEvent(CurrentStats.Health, CurrentStats.MaxHealth));
+          Debug.Log($"{CurrentHealthPercentage} {Health} {CurrentStats.MaxHealth}");
+
+          EventBus.Publish(new PlayerHpChangeEvent(Health.Value, CurrentStats.MaxHealth));
         });
     }
 
@@ -70,11 +74,11 @@ namespace _00_Scripts.Game.Player
       TakeDamage(0);
     }
 
-    public override void TakeDamage(float damage)
+    public override void TakeDamage(float damage, DamageType damageType = DamageType.Physical)
     {
-      base.TakeDamage(damage);
+      base.TakeDamage(damage, damageType);
 
-      EventBus.Publish(new PlayerHpChangeEvent(CurrentStats.Health, CurrentStats.MaxHealth));
+      EventBus.Publish(new PlayerHpChangeEvent(Health.Value, CurrentStats.MaxHealth));
     }
 
     private void OnExperienceChanged(float experience, float nextExperience, int level)

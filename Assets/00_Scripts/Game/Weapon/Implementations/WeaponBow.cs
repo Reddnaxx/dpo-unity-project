@@ -2,26 +2,23 @@ using System;
 using System.Collections.Generic;
 
 using _00_Scripts.Game.Weapon.Core;
-using _00_Scripts.Game.Weapon.Projectiles;
 using _00_Scripts.Game.Weapon.Projectiles.Modules;
 using _00_Scripts.Helpers;
 
-using DG.Tweening;
-
 using UniRx;
 
-using Unity.VisualScripting;
-
 using UnityEngine;
+
+using DG.Tweening;
 
 namespace _00_Scripts.Game.Weapon.Implementations
 {
   public class WeaponBow : Core.Weapon
   {
-    [Header("Bow Settings")] 
+    [Header("Bow Settings")]
     private BowWeaponData BowData => data as BowWeaponData;
 
-    [Header("Arrow Visuals")] 
+    [Header("Arrow Visuals")]
     [SerializeField]
     private SpriteRenderer arrowBody;
 
@@ -30,7 +27,9 @@ namespace _00_Scripts.Game.Weapon.Implementations
     [SerializeField] private List<Sprite> bowChargeSprites;
 
     [Header("Bow Sounds")]
-    [SerializeField] private AudioClip bowDrawSound;
+    [SerializeField]
+    private AudioClip bowDrawSound;
+
     [SerializeField] private AudioClip bowShootSound;
     [SerializeField] private AudioSource audioSource;
 
@@ -39,11 +38,6 @@ namespace _00_Scripts.Game.Weapon.Implementations
     private float _chargeTime;
     private IDisposable _chargeSubscription;
     private CompositeDisposable _bowDisp;
-
-    public WeaponBow(BowWeaponData data)
-    {
-      this.data = data;
-    }
 
     protected override void Awake()
     {
@@ -57,15 +51,25 @@ namespace _00_Scripts.Game.Weapon.Implementations
     {
       base.OnEnable();
 
-      // Начало заряда – при первом нажатии
-      AttackAction
-        .OnPerformedAsObservable()
-        .Where(_ => !_isCharging)
-        .ThrottleFirst(TimeSpan.FromSeconds(data.fireRate))
+      // 1) Поток изменений TotalFireRate
+      var fireRateStream = Observable.EveryUpdate()
+        .Select(_ => TotalFireRate)
+        .DistinctUntilChanged()
+        .StartWith(TotalFireRate);
+
+      // 2) Для каждого rate строим свой ThrottleFirst-поток, переключаясь на последний
+      fireRateStream
+        .Select(rate =>
+          AttackAction
+            .OnPerformedAsObservable()
+            .Where(_ => !_isCharging)
+            .ThrottleFirst(TimeSpan.FromSeconds(rate))
+        )
+        .Switch()
         .Subscribe(_ => StartCharging())
         .AddTo(_bowDisp);
 
-      // Отпускание – выстрел и остановка заряда
+      // 3) Отпускание — остаётся статической подпиской
       AttackAction
         .OnCanceledAsObservable()
         .Where(_ => _isCharging)
@@ -83,18 +87,15 @@ namespace _00_Scripts.Game.Weapon.Implementations
       base.OnDisable();
     }
 
-    // Отменяем автоматический fire из базового Weapon
-    protected override void DoFire()
-    {
-    }
+    // Базовый DoFire отключаем
+    protected override void DoFire() { }
 
     private void StartCharging()
     {
       _isCharging = true;
       _chargeTime = 0f;
 
-      // Проигрываем звук натягивания тетивы
-      if (bowDrawSound != null && audioSource != null)
+      if (bowDrawSound && audioSource)
         audioSource.PlayOneShot(bowDrawSound);
 
       _chargeSubscription = Observable.EveryUpdate()
@@ -102,15 +103,15 @@ namespace _00_Scripts.Game.Weapon.Implementations
         {
           _chargeTime = Mathf.Min(_chargeTime + Time.deltaTime, BowData.maxChargeTime);
 
-          // Меняем спрайт лука в зависимости от уровня заряда
-          var idx = Mathf.FloorToInt(
+          // Спрайт лука
+          int idx = Mathf.FloorToInt(
             _chargeTime / BowData.maxChargeTime * (bowChargeSprites.Count - 1)
           );
           bodyRenderer.sprite = bowChargeSprites[idx];
 
-          // Смещаем стрелу у тетивы
-          var raw = Mathf.Lerp(0f, arrowChargeOffset, _chargeTime / BowData.maxChargeTime);
-          var offset = Mathf.Round(raw * arrowChargeStep) / arrowChargeStep;
+          // Сдвиг стрелы
+          float raw = Mathf.Lerp(0f, arrowChargeOffset, _chargeTime / BowData.maxChargeTime);
+          float offset = Mathf.Round(raw * arrowChargeStep) / arrowChargeStep;
           arrowBody.transform.localPosition =
             _arrowDefaultLocalPosition - new Vector3(offset, 0, 0);
         })
@@ -122,7 +123,6 @@ namespace _00_Scripts.Game.Weapon.Implementations
       _isCharging = false;
       _chargeSubscription?.Dispose();
 
-      // Плавно возвращаем спрайт лука к первоначальному
       DOTween.To(
           () => bowChargeSprites.IndexOf(bodyRenderer.sprite),
           x => bodyRenderer.sprite = bowChargeSprites[Mathf.RoundToInt(x)],
@@ -130,7 +130,6 @@ namespace _00_Scripts.Game.Weapon.Implementations
         )
         .SetUpdate(true);
 
-      // Возвращаем позицию стрелы
       arrowBody.transform
         .DOLocalMove(_arrowDefaultLocalPosition, BowData.releaseTime)
         .SetUpdate(true);
@@ -138,34 +137,31 @@ namespace _00_Scripts.Game.Weapon.Implementations
 
     private void ReleaseAndShoot()
     {
-      var ratio = Mathf.Clamp01(_chargeTime / BowData.maxChargeTime);
+      float ratio = Mathf.Clamp01(_chargeTime / BowData.maxChargeTime);
       if (ratio < BowData.chargeRatioThreshold) return;
 
-      var velocityMultiplier = BowData.velocityMultiplierCurve.Evaluate(ratio);
-      var damageMultiplier = BowData.damageMultiplierCurve.Evaluate(ratio);
+      var velocityMul = BowData.velocityMultiplierCurve.Evaluate(ratio);
+      var damageMul = BowData.damageMultiplierCurve.Evaluate(ratio);
 
       var finalData = BowData.Clone() as BowWeaponData;
       finalData.damage = TotalDamage;
 
-      var projectiles = BowData.fireStrategy.Fire(firePoint.position, transform.rotation, finalData, velocityMultiplier,
-        damageMultiplier);
+      var projectiles = BowData.fireStrategy.Fire(
+        firePoint.position, transform.rotation,
+        finalData, velocityMul, damageMul
+      );
 
-      foreach (var projectile in projectiles)
+      foreach (var proj in projectiles)
       {
-        if (PlayerStats.HasHoming)
-        {
-          projectile.AddModule<HomingModule>();
-        }
-
+        if (PlayerStats.HasHoming) proj.AddModule<HomingModule>();
         if (PlayerStats.HasBounce)
         {
-          projectile.AddModule<BounceModule>();
-          projectile.destroyOnHit = false;
+          proj.AddModule<BounceModule>();
+          proj.destroyOnHit = false;
         }
       }
 
-      // Проигрываем звук выстрела
-      if (bowShootSound != null && audioSource != null)
+      if (bowShootSound && audioSource)
         audioSource.PlayOneShot(bowShootSound);
     }
   }

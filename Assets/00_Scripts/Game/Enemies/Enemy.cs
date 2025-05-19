@@ -13,8 +13,11 @@ namespace _00_Scripts.Game.Enemies
   public class Enemy : Character
   {
     [Header("Movement Settings")]
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private float moveSpeed = 3f;
+
+    [Header("Death Settings")]
+    [SerializeField] private int experienceGain = 100;
 
     private Rigidbody2D _rb;
     private bool _isActive = true;
@@ -24,28 +27,28 @@ namespace _00_Scripts.Game.Enemies
     {
       base.Start();
       _rb = GetComponent<Rigidbody2D>();
-      _playerTransform = FindObjectOfType<PlayerCharacter>().transform;
+      _playerTransform = FindFirstObjectByType<PlayerCharacter>().transform;
 
       OnDeath
-          .Subscribe(_ => Die())
-          .AddTo(this);
+        .Subscribe(_ => Die())
+        .AddTo(this);
     }
 
     private void FixedUpdate() // Используем FixedUpdate для физики
     {
-      if (!_isActive || _playerTransform == null) return;
+      if (!_isActive || !_playerTransform) return;
 
       Vector2 direction = (_playerTransform.position - transform.position).normalized;
-      _rb.linearVelocity = direction * _moveSpeed; // Двигаем через velocity
+      _rb.linearVelocity = direction * moveSpeed; // Двигаем через velocity
 
       // Ориентация спрайта
-      _spriteRenderer.flipX = direction.x < 0;
+      spriteRenderer.flipX = direction.x < 0;
     }
 
     private void Die()
     {
       Debug.Log("Enemy has died");
-      EventBus.Publish(new EnemyDeathEvent(100f));
+      EventBus.Publish(new EnemyDeathEvent(experienceGain));
       _isActive = false;
       _rb.linearVelocity = Vector2.zero; // Останавливаем
       gameObject.SetActive(false);

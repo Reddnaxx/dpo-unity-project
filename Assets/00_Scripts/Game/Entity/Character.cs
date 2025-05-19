@@ -21,14 +21,13 @@ namespace _00_Scripts.Game.Entity
 
     private AudioSource _audioSource;
 
-    private ReactiveProperty<float> _healthPercentage;
+    protected ReactiveProperty<float> Health;
 
     protected Stats CurrentStats;
 
-    protected float CurrentHealthPercentage =>
-      CurrentStats.Health / CurrentStats.MaxHealth;
+    protected float CurrentHealthPercentage = 1f;
 
-    public IObservable<Unit> OnDeath => _healthPercentage
+    public IObservable<Unit> OnDeath => Health
       .Where(value => value <= 0f)
       .First()
       .AsUnitObservable();
@@ -37,7 +36,7 @@ namespace _00_Scripts.Game.Entity
     {
       CurrentStats = new Stats(defaultStats);
 
-      _healthPercentage = new ReactiveProperty<float>(CurrentHealthPercentage);
+      Health = new ReactiveProperty<float>(CurrentStats.MaxHealth);
 
       _audioSource = GetComponent<AudioSource>();
     }
@@ -46,22 +45,38 @@ namespace _00_Scripts.Game.Entity
     {
       if (!healthBarFill) return;
 
-      _healthPercentage.Subscribe(value =>
+      Health.Subscribe(value =>
         {
           DOTween.To(
-            () => healthBarFill.fillAmount,
-            x => healthBarFill.fillAmount = x,
-            value,
+            () => CurrentHealthPercentage,
+            x =>
+            {
+              CurrentHealthPercentage = x;
+              healthBarFill.fillAmount = CurrentHealthPercentage;
+            },
+            value / CurrentStats.MaxHealth,
             0.2f);
         })
         .AddTo(this);
     }
 
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage, DamageType damageType = DamageType.Physical)
     {
-      CurrentStats.TakeDamage(damage);
+      var resistance = damageType switch
+      {
+        DamageType.Fire => CurrentStats.FireResistance,
+        DamageType.Ice => CurrentStats.IceResistance,
+        DamageType.Poison => CurrentStats.PoisonResistance,
+        _ => 0
+      };
 
-      _healthPercentage.Value = Mathf.Round(CurrentHealthPercentage * 100) / 100;
+      var finalDamage = Mathf.RoundToInt(damage * (1 - resistance));
+
+      Health.Value = Mathf.Clamp(
+        Health.Value - Mathf.Max(finalDamage - CurrentStats.PhysicalResistance, 0),
+        0,
+        CurrentStats.MaxHealth
+      );
 
       if (hitSound != null && _audioSource != null)
         _audioSource.PlayOneShot(hitSound);

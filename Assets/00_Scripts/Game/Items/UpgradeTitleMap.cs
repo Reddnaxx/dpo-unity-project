@@ -13,6 +13,8 @@ namespace _00_Scripts.Game.Items
       { StatUpgradeType.AttackMultiplier, "Урон" },
       { StatUpgradeType.Speed, "Скорость" },
       { StatUpgradeType.SpeedMultiplier, "Скорость" },
+      { StatUpgradeType.AttackSpeed , "Скорострельность"},
+      { StatUpgradeType.AttackSpeedMultiplier , "Скорострельность"},
       { StatUpgradeType.PhysicalResistance, "Сопротивление физическому урону" },
       { StatUpgradeType.FireResistance, "Сопротивление огненному урону" },
       { StatUpgradeType.IceResistance, "Сопротивление ледяному урону" },

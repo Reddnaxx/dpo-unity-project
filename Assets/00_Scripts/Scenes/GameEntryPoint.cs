@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+using _00_Scripts.Events;
 using _00_Scripts.Game.Player;
 using _00_Scripts.Game.Weapon.Core;
 using _00_Scripts.Helpers;
@@ -26,14 +27,26 @@ namespace _00_Scripts.Scenes
     }
   }
 
+  [RequireComponent(typeof(AudioSource))]
   public class GameEntryPoint : SceneEntryPoint
   {
-    [SerializeField] private GameObject inventoryUI;
+    [Header("Result Screens")] [SerializeField]
+    private GameObject gameOverUI;
+
+    [SerializeField] private GameObject gameWinUI;
+
+    [Header("Menus")] [SerializeField] private GameObject inventoryUI;
     [SerializeField] private GameObject approveToMainMenuUI;
 
-    [SerializeField] private List<SelectedWeapon> weaponPrefabs;
-    private GameObject _currentMenuGameObject;
+    [Header("Weapons")] [SerializeField] private List<SelectedWeapon> weaponPrefabs;
 
+    [Header("Audio")] [SerializeField] private AudioClip gameOverMusic;
+    [SerializeField] private AudioClip gameWinMusic;
+
+    private AudioSource _audioSource;
+    private GameObject _currentMenuGameObject;
+    private bool _isGameOver;
+    private bool _isWin;
     private PlayerInput _playerInput;
     private WeaponType _selectedWeaponType;
     private UIRoot _uiRoot;
@@ -44,6 +57,7 @@ namespace _00_Scripts.Scenes
     {
       base.Init();
 
+      _audioSource = GetComponent<AudioSource>();
       _uiRoot = FindFirstObjectByType<UIRoot>();
       _playerInput = FindFirstObjectByType<PlayerInput>();
 
@@ -60,6 +74,37 @@ namespace _00_Scripts.Scenes
       var player = FindFirstObjectByType<PlayerCharacter>();
 
       player.Init(weaponPrefabs.Find(weapon => weapon.Type == _selectedWeaponType).Weapon ?? weaponPrefabs[0].Weapon);
+
+      EventBus.On<PlayerDeathEvent>()
+        .Where(_ => !_isGameOver)
+        .Subscribe(_ => OnGameOver())
+        .AddTo(this);
+    }
+
+    private void OnGameOver()
+    {
+      _isGameOver = true;
+
+      _uiRoot.ClearScreens();
+      _uiRoot.AddScreen(gameOverUI);
+      _playerInput.DeactivateInput();
+
+      _audioSource.clip = gameOverMusic;
+      _audioSource.loop = false;
+      _audioSource.Play();
+    }
+
+    private void OnGameWin()
+    {
+      _isWin = true;
+
+      _uiRoot.ClearScreens();
+      _uiRoot.AddScreen(gameWinUI);
+      _playerInput.DeactivateInput();
+
+      _audioSource.clip = gameWinMusic;
+      _audioSource.loop = false;
+      _audioSource.Play();
     }
 
     public void SetWeapon(WeaponType weaponType) => _selectedWeaponType = weaponType;

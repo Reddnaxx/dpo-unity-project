@@ -84,12 +84,19 @@ namespace _00_Scripts.Game.Weapon.Projectiles
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
       if (other.TryGetComponent<Character>(out var ch))
+      {
         ch.TakeDamage(Damage);
+        if (destroyOnHit)
+        {
+          Destroy(gameObject);
+        }
+      }
+      else
+      {
+        Destroy(gameObject);
+      }
 
       _onHit.OnNext(other);
-
-      if (destroyOnHit)
-        Destroy(gameObject);
     }
 
     private void OnDestroy()

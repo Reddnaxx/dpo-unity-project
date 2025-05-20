@@ -1,5 +1,3 @@
-using System;
-
 using _00_Scripts.Events;
 using _00_Scripts.Game.Entity;
 using _00_Scripts.Game.Items;
@@ -13,20 +11,14 @@ namespace _00_Scripts.Game.Player
 {
   public class PlayerCharacter : Character
   {
-    public static Inventory Inventory { get; private set; }
-    public static IStats Stats { get; private set; }
+    public static ReadOnlyReactiveProperty<float> HealthProperty;
 
     [SerializeField] private PlayerLevel playerLevel;
     [SerializeField] private Transform weaponPivot;
 
     private Inventory _inventory;
-    public static ReadOnlyReactiveProperty<float> HealthProperty;
-
-    public void Init(Weapon.Core.Weapon weapon)
-    {
-      Instantiate(weapon, weaponPivot);
-      HealthProperty = Health.ToReadOnlyReactiveProperty();
-    }
+    public static Inventory Inventory { get; private set; }
+    public static IStats Stats { get; private set; }
 
     protected override void Awake()
     {
@@ -38,6 +30,11 @@ namespace _00_Scripts.Game.Player
       Inventory = _inventory;
 
       Stats = CurrentStats;
+
+      OnDeath.Subscribe(_ =>
+      {
+        EventBus.Publish(new PlayerDeathEvent());
+      }).AddTo(this);
 
       playerLevel.CurrentExperience
         .Subscribe(_ => OnExperienceChanged(
@@ -59,6 +56,7 @@ namespace _00_Scripts.Game.Player
         .Subscribe(evt =>
         {
           _inventory.AddItem(evt.NewItem);
+          CurrentHealthPercentage = Health.Value / CurrentStats.MaxHealth;
           Stats = CurrentStats = _inventory.GetFinalStats(defaultStats);
           Health.Value = CurrentHealthPercentage * CurrentStats.MaxHealth;
 
@@ -74,6 +72,12 @@ namespace _00_Scripts.Game.Player
       TakeDamage(0);
     }
 
+    public void Init(Weapon.Core.Weapon weapon)
+    {
+      Instantiate(weapon, weaponPivot);
+      HealthProperty = Health.ToReadOnlyReactiveProperty();
+    }
+
     public override void TakeDamage(float damage, DamageType damageType = DamageType.Physical)
     {
       base.TakeDamage(damage, damageType);
@@ -81,14 +85,9 @@ namespace _00_Scripts.Game.Player
       EventBus.Publish(new PlayerHpChangeEvent(Health.Value, CurrentStats.MaxHealth));
     }
 
-    private void OnExperienceChanged(float experience, float nextExperience, int level)
-    {
+    private void OnExperienceChanged(float experience, float nextExperience, int level) =>
       EventBus.Publish(new PlayerExpChangeEvent(level, experience, nextExperience));
-    }
 
-    private void OnLevelUp(int level)
-    {
-      EventBus.Publish(new PlayerLevelUpEvent(level));
-    }
+    private void OnLevelUp(int level) => EventBus.Publish(new PlayerLevelUpEvent(level));
   }
 }

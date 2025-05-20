@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Comfortable Boots
   m_EditorClassIdentifier: 
   itemName: "\u0423\u0434\u043E\u0431\u043D\u0430\u044F \u043E\u0431\u0443\u0432\u044C"
-  icon: {fileID: 4829742239670414492, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
+  icon: {fileID: -849356006, guid: 8da50c8897b109b4b93daec82783f5ad, type: 3}
   upgrades:
   - category: 0
     statType: 5

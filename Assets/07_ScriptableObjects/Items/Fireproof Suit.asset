@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fireproof Suit
   m_EditorClassIdentifier: 
   itemName: "\u041E\u0433\u043D\u0435\u0441\u0442\u043E\u0439\u043A\u0438\u0439 \u043A\u043E\u0441\u0442\u044E\u043C"
-  icon: {fileID: 7790102585781162631, guid: ca9d6838a083ea748afef71737929bfe, type: 3}
+  icon: {fileID: -446415579, guid: 8da50c8897b109b4b93daec82783f5ad, type: 3}
   upgrades:
   - category: 0
     statType: 9

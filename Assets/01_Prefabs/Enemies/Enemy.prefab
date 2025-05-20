@@ -72,7 +72,6 @@ GameObject:
   - component: {fileID: 6400407889050865908}
   - component: {fileID: 3875831872346558816}
   - component: {fileID: 1957890846456022097}
-  - component: {fileID: 4301755692877942536}
   - component: {fileID: 8422729128907042983}
   - component: {fileID: 1895048254862595350}
   m_Layer: 6
@@ -148,12 +147,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af5d5a84799402585778ce46cd5f73c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultStats: {fileID: 11400000, guid: b46358f673d7d624cb052a1eee425b38, type: 2}
-  healthBarFill: {fileID: 7969696143520346155}
-  hitSound: {fileID: 8300000, guid: 0f91226d4b5c83e4a81a7a59172e23b9, type: 3}
   spriteRenderer: {fileID: 4970857087082202231}
-  moveSpeed: 3
-  experienceGain: 100
+  defaultStats: {fileID: 11400000, guid: e398c65511b02e74382db1c372e5f958, type: 2}
+  healthBarFill: {fileID: 7969696143520346155}
+  hitFlashDuration: 0.15
+  hitSound: {fileID: 8300000, guid: 0f91226d4b5c83e4a81a7a59172e23b9, type: 3}
+  experienceGain: 40
+  attackRange: 0.5
 --- !u!82 &1957890846456022097
 AudioSource:
   m_ObjectHideFlags: 0
@@ -167,7 +167,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -251,20 +251,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4301755692877942536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2710249244568582326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c4458bcf16b7c045a8b0a4a0c8cbbe3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  speed: 0
 --- !u!195 &8422729128907042983
 NavMeshAgent:
   m_ObjectHideFlags: 0

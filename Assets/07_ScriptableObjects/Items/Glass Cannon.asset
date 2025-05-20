@@ -18,8 +18,8 @@ MonoBehaviour:
   - category: 0
     statType: 1
     weaponType: 0
-    value: 0.875
+    value: 0.5
   - category: 0
     statType: 3
     weaponType: 0
-    value: 1.1
+    value: 1.5

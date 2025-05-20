@@ -15,6 +15,7 @@ MonoBehaviour:
   fireStrategy: {fileID: 11400000, guid: cbfe5aff0119f00428b6bf1532471d17, type: 2}
   fireRate: 0.8
   orderChangeAngle: 60
+  followTime: 0.2
   projectilePrefab: {fileID: 3727086930257797264, guid: 49afca56e509c38428c4c79fe17dcb4f, type: 3}
   projectileSpeed: 12
-  damage: 6
+  damage: 10

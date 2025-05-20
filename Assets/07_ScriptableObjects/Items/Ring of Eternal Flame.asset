@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6f6c371db641c9a4cafecd263e8762, type: 3}
+  m_Name: Ring of Eternal Flame
+  m_EditorClassIdentifier: 
+  itemName: "\u041A\u043E\u043B\u044C\u0446\u043E \u0412\u0435\u0447\u043D\u043E\u0433\u043E
+    \u041F\u043B\u0430\u043C\u0435\u043D\u0438"
+  icon: {fileID: -384200374, guid: b94679175c21662438ee06f49d70d69b, type: 3}
+  upgrades:
+  - category: 0
+    statType: 9
+    weaponType: 0
+    value: 0.5
+  - category: 0
+    statType: 10
+    weaponType: 0
+    value: -0.2

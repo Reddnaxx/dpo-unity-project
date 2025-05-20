@@ -1,3 +1,5 @@
+using System;
+
 using _00_Scripts.Events;
 using _00_Scripts.Game.Items;
 using _00_Scripts.Game.Player;
@@ -22,6 +24,8 @@ namespace _00_Scripts.UI
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private Image healthBar;
 
+    [SerializeField] private TMP_Text timerText;
+
     protected override void Awake()
     {
       base.Awake();
@@ -33,6 +37,19 @@ namespace _00_Scripts.UI
       EventBus.On<PlayerHpChangeEvent>()
         .Subscribe(evt => UpdateHealth(evt.CurrentHealth, evt.MaxHealth))
         .AddTo(this);
+
+      Observable.Timer(TimeSpan.FromSeconds(1))
+        .Repeat()
+        .Subscribe(_ => UpdateTimer())
+        .AddTo(this);
+    }
+
+    private void UpdateTimer()
+    {
+      var totalSeconds = Mathf.FloorToInt(Time.timeSinceLevelLoad);
+      var minutes = totalSeconds / 60;
+      var seconds = totalSeconds % 60;
+      timerText.text = $"{minutes:00}:{seconds:00}";
     }
 
     private void UpdateHealth(float health, float maxHealth)

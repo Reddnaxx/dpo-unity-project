@@ -13,14 +13,8 @@ namespace _00_Scripts.Game.Enemies
   [RequireComponent(typeof(Collider2D))] // Добавляем обязательный коллайдер
   public class Enemy : Character
   {
-    [Header("Movement Settings")]
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private float moveSpeed = 3f;
-
     [Header("Combat Settings")]
     [SerializeField] private int experienceGain = 100;
-    [SerializeField] private float attackDamage = 10f;
-    [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private float attackRange = 0.5f;
 
     private Rigidbody2D _rb;
@@ -58,14 +52,14 @@ namespace _00_Scripts.Game.Enemies
       {
         // Иначе - двигаемся к игроку
         Vector2 direction = (_playerTransform.position - transform.position).normalized;
-        _rb.linearVelocity = direction * moveSpeed;
+        _rb.linearVelocity = direction * CurrentStats.Speed;
         spriteRenderer.flipX = direction.x < 0;
       }
     }
 
     private void TryAttackPlayer()
     {
-      if (Time.time - _lastAttackTime >= attackCooldown)
+      if (Time.time - _lastAttackTime >= CurrentStats.AttackSpeed)
       {
         _lastAttackTime = Time.time;
         AttackPlayer();
@@ -80,7 +74,7 @@ namespace _00_Scripts.Game.Enemies
         var player = _playerTransform.GetComponent<PlayerCharacter>();
         if (player != null)
         {
-          player.TakeDamage(attackDamage);
+          player.TakeDamage(CurrentStats.Attack);
         }
       }
     }

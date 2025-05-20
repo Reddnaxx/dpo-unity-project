@@ -14,8 +14,10 @@ namespace _00_Scripts.Game.Entity
   [RequireComponent(typeof(AudioSource))]
   public abstract class Character : MonoBehaviour
   {
+    [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] protected DefaultStats defaultStats;
     [SerializeField] [CanBeNull] protected Image healthBarFill;
+    [SerializeField] private float hitFlashDuration = 0.15f;
 
     [Header("Hit Sound")] [SerializeField] private AudioClip hitSound;
 
@@ -77,6 +79,10 @@ namespace _00_Scripts.Game.Entity
         0,
         CurrentStats.MaxHealth
       );
+
+      spriteRenderer?
+        .DOColor(Color.red, hitFlashDuration)
+        .OnComplete(() => spriteRenderer.DOColor(Color.white, hitFlashDuration));
 
       if (hitSound != null && _audioSource != null)
         _audioSource.PlayOneShot(hitSound);

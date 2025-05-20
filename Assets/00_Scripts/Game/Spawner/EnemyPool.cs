@@ -1,72 +1,78 @@
-using UnityEngine;
-using UniRx;
 using System.Collections.Generic;
+
 using _00_Scripts.Game.Enemies;
 
-public class EnemyPool : MonoBehaviour
+using UniRx;
+
+using UnityEngine;
+
+namespace _00_Scripts.Game.Spawner
 {
-  [SerializeField] private List<Enemy> _enemyPrefabs; // Теперь список префабов
-  [SerializeField] private int _poolSize = 40;
-
-  private Queue<Enemy> _enemyPool = new Queue<Enemy>();
-  private int _currentPrefabIndex = 0;
-
-  private void Awake()
+  public class EnemyPool : MonoBehaviour
   {
-    InitializePool();
-  }
+    [SerializeField] private List<Enemy> _enemyPrefabs; // Теперь список префабов
+    [SerializeField] private int _poolSize = 40;
 
-  private void InitializePool()
-  {
-    _enemyPool.Clear();
+    private Queue<Enemy> _enemyPool = new Queue<Enemy>();
+    private int _currentPrefabIndex = 0;
 
-    for (int i = 0; i < _poolSize; i++)
+    private void Awake()
     {
-      Enemy enemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
-      enemy.gameObject.SetActive(false);
+      InitializePool();
+    }
 
-      enemy.OnDeath
+    private void InitializePool()
+    {
+      _enemyPool.Clear();
+
+      for (int i = 0; i < _poolSize; i++)
+      {
+        Enemy enemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+        enemy.gameObject.SetActive(false);
+
+        enemy.OnDeath
           .Subscribe(_ => ReturnEnemy(enemy))
           .AddTo(enemy);
 
-      _enemyPool.Enqueue(enemy);
+        _enemyPool.Enqueue(enemy);
+      }
     }
-  }
 
-  public void ChangeEnemyType(int waveNumber)
-  {
-    // Выбираем префаб на основе номера волны (можно изменить логику выбора)
-    _currentPrefabIndex = waveNumber % _enemyPrefabs.Count;
-    InitializePool(); // Переинициализируем пул с новым типом врагов
-  }
-
-  public Enemy GetEnemy(Vector2 position, Transform target)
-  {
-    if (_enemyPool.Count == 0)
+    public void ChangeEnemyType(int waveNumber)
     {
-      Enemy newEnemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
-      newEnemy.OnDeath
+      // Выбираем префаб на основе номера волны (можно изменить логику выбора)
+      _currentPrefabIndex = waveNumber % _enemyPrefabs.Count;
+      InitializePool(); // Переинициализируем пул с новым типом врагов
+    }
+
+    public Enemy GetEnemy(Vector2 position, Transform target)
+    {
+      if (_enemyPool.Count == 0)
+      {
+        Enemy newEnemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+        newEnemy.OnDeath
           .Subscribe(_ => ReturnEnemy(newEnemy))
           .AddTo(newEnemy);
 
-      InitializeEnemy(newEnemy, position, target);
-      return newEnemy;
+        InitializeEnemy(newEnemy, position, target);
+        return newEnemy;
+      }
+
+      Enemy enemy = _enemyPool.Dequeue();
+      InitializeEnemy(enemy, position, target);
+      return enemy;
     }
 
-    Enemy enemy = _enemyPool.Dequeue();
-    InitializeEnemy(enemy, position, target);
-    return enemy;
-  }
+    public void ReturnEnemy(Enemy enemy)
+    {
+      enemy.gameObject.SetActive(false);
+      _enemyPool.Enqueue(enemy);
+    }
 
-  public void ReturnEnemy(Enemy enemy)
-  {
-    enemy.gameObject.SetActive(false);
-    _enemyPool.Enqueue(enemy);
-  }
-
-  private void InitializeEnemy(Enemy enemy, Vector2 position, Transform target)
-  {
-    enemy.transform.position = position;
-    enemy.gameObject.SetActive(true);
+    private void InitializeEnemy(Enemy enemy, Vector2 position, Transform target)
+    {
+      enemy.transform.position = position;
+      enemy.gameObject.SetActive(true);
+    }
   }
 }

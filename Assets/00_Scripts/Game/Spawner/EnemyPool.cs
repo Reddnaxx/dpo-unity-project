@@ -13,21 +13,24 @@ namespace _00_Scripts.Game.Spawner
     [SerializeField] private List<Enemy> _enemyPrefabs; // Теперь список префабов
     [SerializeField] private int _poolSize = 40;
 
-    private Queue<Enemy> _enemyPool = new Queue<Enemy>();
-    private int _currentPrefabIndex = 0;
+    private readonly Queue<Enemy> _enemyPool = new();
+    private int _currentPrefabIndex;
+
+    public int PoolSize { get; private set; } = int.MaxValue;
 
     private void Awake()
     {
       InitializePool();
+      PoolSize = _poolSize;
     }
 
     private void InitializePool()
     {
       _enemyPool.Clear();
 
-      for (int i = 0; i < _poolSize; i++)
+      for (var i = 0; i < _poolSize; i++)
       {
-        Enemy enemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+        var enemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
         enemy.gameObject.SetActive(false);
 
         enemy.OnDeath
@@ -35,6 +38,8 @@ namespace _00_Scripts.Game.Spawner
           .AddTo(enemy);
 
         _enemyPool.Enqueue(enemy);
+
+        PoolSize--;
       }
     }
 
@@ -49,7 +54,7 @@ namespace _00_Scripts.Game.Spawner
     {
       if (_enemyPool.Count == 0)
       {
-        Enemy newEnemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+        var newEnemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
         newEnemy.OnDeath
           .Subscribe(_ => ReturnEnemy(newEnemy))
           .AddTo(newEnemy);
@@ -58,7 +63,7 @@ namespace _00_Scripts.Game.Spawner
         return newEnemy;
       }
 
-      Enemy enemy = _enemyPool.Dequeue();
+      var enemy = _enemyPool.Dequeue();
       InitializeEnemy(enemy, position, target);
       return enemy;
     }

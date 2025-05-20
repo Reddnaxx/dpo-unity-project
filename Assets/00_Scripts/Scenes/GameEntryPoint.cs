@@ -79,6 +79,11 @@ namespace _00_Scripts.Scenes
         .Where(_ => !_isGameOver)
         .Subscribe(_ => OnGameOver())
         .AddTo(this);
+
+      EventBus.On<WavesEndEvent>()
+        .Where(_ => !_isWin)
+        .Subscribe(_ => OnGameWin())
+        .AddTo(this);
     }
 
     private void OnGameOver()

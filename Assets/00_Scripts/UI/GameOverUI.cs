@@ -12,6 +12,8 @@ namespace _00_Scripts.UI
   {
     [SerializeField] private TMP_Text resultsText;
 
+    private void Start() => resultsText.text = $"Продержался {Time.timeSinceLevelLoad:F1} секунд";
+
     public void OnRestartButtonClick() => EventBus.Publish(new LoadSceneEvent(SceneNames.Map));
 
     public void OnMainMenuButtonClick() => EventBus.Publish(new LoadSceneEvent(SceneNames.MainMenu));

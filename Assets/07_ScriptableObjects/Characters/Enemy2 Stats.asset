@@ -15,7 +15,7 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 50
   <Attack>k__BackingField: 10
   <AttackSpeed>k__BackingField: 0.5
-  <Speed>k__BackingField: 3.5
+  <Speed>k__BackingField: 2.5
   <PhysicalResistance>k__BackingField: 0.05
   <FireResistance>k__BackingField: 0
   <IceResistance>k__BackingField: 0

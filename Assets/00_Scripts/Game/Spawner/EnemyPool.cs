@@ -52,9 +52,11 @@ namespace _00_Scripts.Game.Spawner
 
     public Enemy GetEnemy(Vector2 position, int _waveIndex, Transform target)
     {
+      var prefabIndex = (_waveIndex - 1) % _enemyPrefabs.Count;
+
       if (_enemyPool.Count == 0)
       {
-        var newEnemy = Instantiate(_enemyPrefabs[_waveIndex - 1], transform);
+        var newEnemy = Instantiate(_enemyPrefabs[prefabIndex], transform);
         newEnemy.OnDeath
           .Subscribe(_ => ReturnEnemy(newEnemy))
           .AddTo(newEnemy);

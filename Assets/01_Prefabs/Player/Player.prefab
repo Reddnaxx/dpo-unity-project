@@ -88,7 +88,7 @@ MonoBehaviour:
   hitFlashDuration: 0.15
   hitSound: {fileID: 0}
   playerLevel:
-    <ExperienceToNextLevelModifier>k__BackingField: 1.5
+    <ExperienceToNextLevelModifier>k__BackingField: 1.25
   weaponPivot: {fileID: 2654701582961574444}
 --- !u!114 &1030497728447433197
 MonoBehaviour:

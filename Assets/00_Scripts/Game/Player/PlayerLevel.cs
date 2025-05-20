@@ -9,17 +9,17 @@ namespace _00_Scripts.Game.Player
   [Serializable]
   public class PlayerLevel
   {
-    [field: SerializeField] public float ExperienceToNextLevelModifier { get; private set; } = 1.5f;
-
-    public ReactiveProperty<int> Level { get; }
-    public ReactiveProperty<float> CurrentExperience { get; }
-    public float ExperienceToNextLevel { get; private set; } = 100;
+    [field: SerializeField] public float ExperienceToNextLevelModifier { get; private set; } = 1.25f;
 
     public PlayerLevel(int startLevel = 1)
     {
       Level = new ReactiveProperty<int>(startLevel);
       CurrentExperience = new ReactiveProperty<float>(0);
     }
+
+    public ReactiveProperty<int> Level { get; }
+    public ReactiveProperty<float> CurrentExperience { get; }
+    public float ExperienceToNextLevel { get; private set; } = 100;
 
     public void AddExperience(float experience)
     {

@@ -1,5 +1,7 @@
 using _00_Scripts.Game.Rewards;
 
+using DG.Tweening;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,9 +14,9 @@ namespace _00_Scripts.Game.Items
     [SerializeField] private float tweenDuration;
 
     [SerializeField] private LevelUpRewardItem hoverPreview;
+    private Item _item;
 
     private GameObject _previewGameObject;
-    private Item _item;
 
     public void Init(Item item)
     {
@@ -22,10 +24,7 @@ namespace _00_Scripts.Game.Items
       iconImage.sprite = item.icon;
     }
 
-    public void OnHoverStart()
-    {
-      bgImage.color = new Color(bgImage.color.r, bgImage.color.g, bgImage.color.b, 1f);
-    }
+    public void OnHoverStart() => bgImage.color = new Color(bgImage.color.r, bgImage.color.g, bgImage.color.b, 1f);
 
     public void OnHoverEnd()
     {
@@ -37,6 +36,7 @@ namespace _00_Scripts.Game.Items
     {
       var preview = Instantiate(hoverPreview, transform);
       preview.Init(_item);
+      preview.transform.DOMoveZ(1, 0);
 
       _previewGameObject = preview.gameObject;
     }

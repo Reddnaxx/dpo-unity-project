@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ecbf5adeb964ea68e90f45bd7e3a967, type: 3}
   m_Name: Shotgun Fire Strategy
   m_EditorClassIdentifier: 
-  pelletCount: 5
+  pelletCount: 8
   spreadAngle: 12

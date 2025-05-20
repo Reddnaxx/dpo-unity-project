@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,6 +27,8 @@ namespace _00_Scripts.Game.Spawner
     private float _waveTimer;
     private int _currentWave = 1;
 
+    public event Action AllEnemiesDefeated;
+
     private void Start()
     {
       _waveTimer = _waveCooldown;
@@ -35,6 +38,7 @@ namespace _00_Scripts.Game.Spawner
     private void Update()
     {
       HandleWaveSpawning();
+      CheckEnemiesCount();
     }
 
     private void HandleWaveSpawning()
@@ -43,18 +47,28 @@ namespace _00_Scripts.Game.Spawner
 
       if (_waveTimer <= 0)
       {
-        // Меняем тип врагов перед началом новой волны
         _enemyPool.ChangeEnemyType(_currentWave);
-
         StartCoroutine(SpawnWave());
         _waveTimer = _waveCooldown;
         _currentWave++;
       }
     }
 
-    // Остальные методы остаются без изменений
+    private void CheckEnemiesCount()
+    {
+      _activeEnemies.RemoveAll(enemy => enemy == null || !enemy.gameObject.activeInHierarchy);
+
+      if (_activeEnemies.Count == 0 && _waveTimer <= _waveCooldown * 0.9f)
+      {
+        Console.Write("Враги убиты");
+        AllEnemiesDefeated?.Invoke();
+      }
+    }
+
     private IEnumerator SpawnWave()
     {
+      _activeEnemies.RemoveAll(enemy => enemy == null || !enemy.gameObject.activeInHierarchy);
+
       int enemiesToSpawn = _enemiesPerWave + _currentWave;
 
       for (int i = 0; i < enemiesToSpawn && _activeEnemies.Count < _maxEnemies; i++)
@@ -87,7 +101,7 @@ namespace _00_Scripts.Game.Spawner
 
       for (int i = 0; i < attempts; i++)
       {
-        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized;
         spawnPosition = (Vector2)_playerTransform.position + randomDirection * _spawnRadius;
 
         if (!Physics2D.OverlapCircle(spawnPosition, _spawnCheckRadius, _wallLayer))

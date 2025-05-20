@@ -50,11 +50,11 @@ namespace _00_Scripts.Game.Spawner
       InitializePool(); // Переинициализируем пул с новым типом врагов
     }
 
-    public Enemy GetEnemy(Vector2 position, Transform target)
+    public Enemy GetEnemy(Vector2 position, int _waveIndex, Transform target)
     {
       if (_enemyPool.Count == 0)
       {
-        var newEnemy = Instantiate(_enemyPrefabs[_currentPrefabIndex], transform);
+        var newEnemy = Instantiate(_enemyPrefabs[_waveIndex - 1], transform);
         newEnemy.OnDeath
           .Subscribe(_ => ReturnEnemy(newEnemy))
           .AddTo(newEnemy);

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using UniRx;
 using _00_Scripts.Events;
 using _00_Scripts.Game.Enemies;
 using _00_Scripts.Helpers;
@@ -21,6 +21,7 @@ namespace _00_Scripts.Game.Spawner
     [SerializeField] private int _maxEnemies = 10;
     [SerializeField] private float _spawnRadius = 5f;
     [SerializeField] private LayerMask _wallLayer;
+    [SerializeField] private int _maxWaves = 3;
 
     [Header("Wave Settings")] [SerializeField]
     private int _enemiesPerWave = 5;
@@ -29,7 +30,8 @@ namespace _00_Scripts.Game.Spawner
     [SerializeField] private float _spawnCheckRadius = 0.5f;
 
     private readonly List<Enemy> _activeEnemies = new();
-    private int _currentWave = 1;
+    private int _currentWave = 0;
+    
     private float _waveTimer;
 
     private void Start()
@@ -65,9 +67,8 @@ namespace _00_Scripts.Game.Spawner
 
     private void CheckEnemiesCount()
     {
-      _activeEnemies.RemoveAll(enemy => enemy == null || !enemy.gameObject.activeInHierarchy);
 
-      if (_activeEnemies.Count == 0 && _enemyPool.PoolSize == 0)
+      if (_currentWave >= _maxWaves  && _activeEnemies.Count == 0)
       {
         Console.Write("Враги убиты");
         EventBus.Publish(new WavesEndEvent());
@@ -76,13 +77,20 @@ namespace _00_Scripts.Game.Spawner
 
     private IEnumerator SpawnWave()
     {
-      _activeEnemies.RemoveAll(enemy => enemy == null || !enemy.gameObject.activeInHierarchy);
-
+      if (_currentWave >= _maxWaves) yield break;
       var enemiesToSpawn = _enemiesPerWave + _currentWave;
 
       for (var i = 0; i < enemiesToSpawn && _activeEnemies.Count < _maxEnemies; i++)
       {
-        if (TrySpawnEnemy(out var enemy)) _activeEnemies.Add(enemy);
+        if (TrySpawnEnemy(out var enemy)) 
+        {
+
+          _activeEnemies.Add(enemy);
+          enemy.OnDeath
+          .Subscribe(_ => _activeEnemies.Remove(enemy))
+          .AddTo(enemy);
+
+        } 
         yield return new WaitForSeconds(0.5f);
       }
     }
@@ -92,9 +100,9 @@ namespace _00_Scripts.Game.Spawner
       enemy = null;
       var spawnPosition = GetValidSpawnPosition();
 
-      if (spawnPosition != Vector2.zero)
+      if (spawnPosition != Vector2.zero && _currentWave < _maxWaves)
       {
-        enemy = _enemyPool.GetEnemy(spawnPosition, _playerTransform);
+        enemy = _enemyPool.GetEnemy(spawnPosition, _currentWave, _playerTransform);
         return true;
       }
 

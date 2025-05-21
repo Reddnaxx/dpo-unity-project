@@ -12,6 +12,8 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using YG;
+
 namespace _00_Scripts.Scenes
 {
   [Serializable]
@@ -94,6 +96,8 @@ namespace _00_Scripts.Scenes
       _uiRoot.AddScreen(gameOverUI);
       _playerInput.DeactivateInput();
 
+      YG2.InterstitialAdvShow();
+
       _audioSource.clip = gameOverMusic;
       _audioSource.loop = false;
       _audioSource.Play();
@@ -106,6 +110,8 @@ namespace _00_Scripts.Scenes
       _uiRoot.ClearScreens();
       _uiRoot.AddScreen(gameWinUI);
       _playerInput.DeactivateInput();
+
+      YG2.InterstitialAdvShow();
 
       _audioSource.clip = gameWinMusic;
       _audioSource.loop = false;

@@ -5,17 +5,15 @@ using UniRx;
 using _00_Scripts.Events;
 using _00_Scripts.Game.Enemies;
 using _00_Scripts.Helpers;
-
 using UnityEngine;
-
 using Random = UnityEngine.Random;
 
 namespace _00_Scripts.Game.Spawner
 {
   public class EnemySpawner : MonoBehaviour
   {
-    [Header("Settings")] [SerializeField] private EnemyPool _enemyPool;
-
+    [Header("Settings")]
+    [SerializeField] private EnemyPool _enemyPool;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private float _spawnInterval = 3f;
     [SerializeField] private int _maxEnemies = 10;
@@ -23,16 +21,16 @@ namespace _00_Scripts.Game.Spawner
     [SerializeField] private LayerMask _wallLayer;
     [SerializeField] private int _maxWaves = 3;
 
-    [Header("Wave Settings")] [SerializeField]
-    private int _enemiesPerWave = 5;
-
+    [Header("Wave Settings")]
+    [SerializeField] private int _enemiesPerWave = 5;
     [SerializeField] private float _waveCooldown = 10f;
     [SerializeField] private float _spawnCheckRadius = 0.5f;
 
     private readonly List<Enemy> _activeEnemies = new();
     private int _currentWave = 0;
-    
+    private int _enemiesSpawnedInCurrentWave = 0;
     private float _waveTimer;
+    private bool _waveInProgress = false;
 
     private void Start()
     {
@@ -46,83 +44,86 @@ namespace _00_Scripts.Game.Spawner
       CheckEnemiesCount();
     }
 
-    private void OnDrawGizmosSelected()
-    {
-      Gizmos.color = Color.green;
-      Gizmos.DrawWireSphere(_playerTransform.position, _spawnRadius);
-    }
-
     private void HandleWaveSpawning()
     {
+      if (_currentWave >= _maxWaves) return;
+
       _waveTimer -= Time.deltaTime;
 
-      if (_waveTimer <= 0)
+      if (_waveTimer <= 0 && !_waveInProgress)
       {
-        _enemyPool.ChangeEnemyType(_currentWave);
         StartCoroutine(SpawnWave());
-        _waveTimer = _waveCooldown;
-        _currentWave++;
-      }
-    }
-
-    private void CheckEnemiesCount()
-    {
-
-      if (_currentWave >= _maxWaves  && _activeEnemies.Count == 0)
-      {
-        Console.Write("Враги убиты");
-        EventBus.Publish(new WavesEndEvent());
       }
     }
 
     private IEnumerator SpawnWave()
     {
-      if (_currentWave >= _maxWaves) yield break;
-      var enemiesToSpawn = _enemiesPerWave + _currentWave;
+      _waveInProgress = true;
+      _enemiesSpawnedInCurrentWave = 0;
+      _enemyPool.ChangeEnemyType(_currentWave);
 
-      for (var i = 0; i < enemiesToSpawn && _activeEnemies.Count < _maxEnemies; i++)
+      int enemiesToSpawn = Mathf.Min(_enemiesPerWave, _maxEnemies - _activeEnemies.Count);
+
+      for (int i = 0; i < enemiesToSpawn; i++)
       {
-        if (TrySpawnEnemy(out var enemy)) 
+        if (TrySpawnEnemy(out var enemy))
         {
-
           _activeEnemies.Add(enemy);
-          enemy.OnDeath
-          .Subscribe(_ => _activeEnemies.Remove(enemy))
-          .AddTo(enemy);
+          _enemiesSpawnedInCurrentWave++;
 
-        } 
-        yield return new WaitForSeconds(0.5f);
+          enemy.OnDeath
+            .Subscribe(_ => _activeEnemies.Remove(enemy))
+            .AddTo(enemy);
+        }
+        yield return new WaitForSeconds(_spawnInterval);
+      }
+
+      _currentWave++;
+      _waveTimer = _waveCooldown;
+      _waveInProgress = false;
+    }
+
+    private void CheckEnemiesCount()
+    {
+      if (_currentWave >= _maxWaves && _activeEnemies.Count == 0)
+      {
+        EventBus.Publish(new WavesEndEvent());
+        enabled = false; // Отключаем спавнер после завершения всех волн
       }
     }
 
     private bool TrySpawnEnemy(out Enemy enemy)
     {
       enemy = null;
-      var spawnPosition = GetValidSpawnPosition();
+      Vector2 spawnPosition = GetValidSpawnPosition();
 
-      if (spawnPosition != Vector2.zero && _currentWave < _maxWaves)
+      if (spawnPosition != Vector2.zero)
       {
         enemy = _enemyPool.GetEnemy(spawnPosition, _currentWave, _playerTransform);
         return true;
       }
-
       return false;
     }
 
     private Vector2 GetValidSpawnPosition()
     {
-      var attempts = 10;
-      var spawnPosition = Vector2.zero;
-
-      for (var i = 0; i < attempts; i++)
+      for (int i = 0; i < 10; i++)
       {
-        var randomDirection = Random.insideUnitCircle.normalized;
-        spawnPosition = (Vector2)_playerTransform.position + randomDirection * _spawnRadius;
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        Vector2 spawnPosition = (Vector2)_playerTransform.position + randomDirection * _spawnRadius;
 
-        if (!Physics2D.OverlapCircle(spawnPosition, _spawnCheckRadius, _wallLayer)) return spawnPosition;
+        if (!Physics2D.OverlapCircle(spawnPosition, _spawnCheckRadius, _wallLayer))
+        {
+          return spawnPosition;
+        }
       }
-
       return Vector2.zero;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+      Gizmos.color = Color.green;
+      Gizmos.DrawWireSphere(_playerTransform.position, _spawnRadius);
     }
   }
 }

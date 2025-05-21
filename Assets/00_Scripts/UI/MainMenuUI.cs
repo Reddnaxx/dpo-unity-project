@@ -1,5 +1,3 @@
-using UnityEditor;
-
 using UnityEngine;
 
 namespace _00_Scripts.UI
@@ -7,6 +5,7 @@ namespace _00_Scripts.UI
   public class MainMenuUI : MonoBehaviour
   {
     [SerializeField] private WeaponSelectUI weaponSelectUI;
+    [SerializeField] private SettingsUI settingsUI;
 
     private UIRoot _uiRoot;
 
@@ -14,13 +13,6 @@ namespace _00_Scripts.UI
 
     public void OnPlayClick() => _uiRoot.AddScreen(weaponSelectUI.gameObject);
 
-    public void OnExitClick()
-    {
-#if UNITY_EDITOR
-      EditorApplication.isPlaying = false;
-#else
-      Application.Quit();
-#endif
-    }
+    public void OnSettingsClick() => _uiRoot.AddScreen(settingsUI.gameObject);
   }
 }
